@@ -1,15 +1,30 @@
 #!/bin/sh
-# DEPENDENCY-FREE FALLBACK secret scanner.
+# Secret scan for the pre-commit hook.
 #
-# Prefer gitleaks (used by lefthook.yml by default). Use this script only when
-# the gitleaks binary cannot be installed. It matches a handful of well-known
+# Uses gitleaks when it is on PATH (recommended), otherwise falls back to the
+# small pattern list below. The fallback only matches a handful of well-known
 # token formats — it is NOT a replacement for a real scanner.
 #
 # Usage: sh .githooks/check-secrets.sh [files...]
 # With no arguments it falls back to the staged files.
 #
-# Note: filenames containing spaces are not handled perfectly — this is a
-# best-effort net, not a substitute for secret scanning in CI.
+# Why a script instead of an inline `run:` block in lefthook.yml?
+# Lefthook on Windows wraps a `run:` command in double quotes without escaping
+# quotes inside it, so `echo "..."` in a multiline block breaks the hook.
+# Keeping the logic in a file sidesteps that entirely.
+#
+# Set SECRET_SCAN_FALLBACK=1 to force the built-in patterns (used by the tests
+# so they don't depend on whether gitleaks happens to be installed).
+
+if [ -z "${SECRET_SCAN_FALLBACK:-}" ] && command -v gitleaks >/dev/null 2>&1; then
+  gitleaks git --pre-commit --staged --redact --no-banner -v
+  code=$?
+  [ "$code" -eq 0 ] && exit 0
+  [ "$code" -eq 1 ] && exit 1
+  # gitleaks before 8.19 has no `git` subcommand; fall back to `protect`.
+  gitleaks protect --staged --redact --no-banner -v
+  exit $?
+fi
 
 files="$*"
 [ -z "$files" ] && files=$(git diff --cached --name-only --diff-filter=ACMR)
@@ -22,7 +37,7 @@ hit=0
 for f in $files; do
   [ -f "$f" ] || continue
   if grep -nEI "$pattern" "$f" >/dev/null 2>&1; then
-    echo "✖ Possible secret in: $f"
+    echo "Possible secret in: $f"
     grep -nEI "$pattern" "$f" | cut -c1-160 | sed 's/^/    /'
     hit=1
   fi
@@ -34,5 +49,8 @@ if [ "$hit" -eq 1 ]; then
   echo "False positive? Skip with: LEFTHOOK=0 git commit ..."
   exit 1
 fi
+
+echo "! gitleaks not installed — used the built-in pattern fallback."
+echo "  Install it: winget install gitleaks   (or see README)"
 
 exit 0

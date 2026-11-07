@@ -121,6 +121,7 @@ jobs:
         run: |
           set -eu
           script=recipes/10-githooks-lefthook/.githooks/check-secrets.sh
+          export SECRET_SCAN_FALLBACK=1
           tmp="$(mktemp -d)"
 
           echo "nothing here" > "$tmp/clean.txt"
@@ -132,3 +133,59 @@ jobs:
             exit 1
           fi
           echo "ok: leaked key blocked"
+
+  hooks-windows:
+    name: Git hooks work on Windows (real lefthook)
+    runs-on: windows-latest
+    defaults:
+      run:
+        shell: bash
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install lefthook
+        run: npm i -g lefthook
+
+      - name: Hooks block bad input and allow good input
+        run: |
+          set -eu
+          tmp="$(mktemp -d)"
+          cp -r recipes/10-githooks-lefthook/. "$tmp/"
+          cd "$tmp"
+          git init -q
+          git config user.email ci@example.com
+          git config user.name CI
+
+          lefthook validate
+          lefthook install
+
+          printf 'hello\n' > a.txt
+          git add a.txt
+
+          if git commit -m "added stuff" >/dev/null 2>&1; then
+            echo "::error::a non-conventional commit message was accepted"
+            exit 1
+          fi
+          echo "ok: bad message blocked"
+
+          git commit -q -m "feat: add a file"
+          echo "ok: conventional message accepted"
+
+          printf '%0.sx' $(seq 1 2000000) > big.bin
+          git add big.bin
+          if git commit -q -m "chore: add big file" >/dev/null 2>&1; then
+            echo "::error::a 2 MB file was accepted"
+            exit 1
+          fi
+          echo "ok: large file blocked"
+          git reset -q HEAD big.bin && rm -f big.bin
+
+          printf 'key = AKIAIOSFODNN7EXAMPLE\n' > secret.txt
+          git add secret.txt
+          if git commit -q -m "chore: add config" >/dev/null 2>&1; then
+            echo "::error::a staged secret was accepted"
+            exit 1
+          fi
+          echo "ok: secret blocked"
+
+          echo "Windows hooks OK"

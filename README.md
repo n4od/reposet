@@ -37,7 +37,7 @@ decision is yours to make.
 | Security | CodeQL scanning on push, PR, and weekly |
 | Triage | Stale bot + path-based auto-labeling |
 | Releases | Grouped auto-generated notes + tag→release workflow |
-| Git hooks | Secret scan (gitleaks), large-file block, Conventional Commits |
+| Git hooks | Secret scan (gitleaks, with a built-in fallback), large-file block, Conventional Commits |
 | Repo config | `.editorconfig`, `.gitattributes`, `.gitignore` |
 | Scale-out | Reusable `workflow_call` CI for many repos |
 
@@ -110,7 +110,7 @@ outright.
 | `.gitignore` generators | Only `.gitignore` | `.editorconfig` + `.gitattributes`, which kill CRLF and lockfile diff noise |
 | Husky | Requires Node in every repo that uses it | Lefthook: one binary, any stack, no Node |
 | Hand-rolled `.git/hooks` | Never reaches teammates — `.git/` isn't committed | `lefthook install` and committed config |
-| gitleaks on its own | Excellent scanner, but you still have to wire and tune it | Wired into `pre-commit`, graceful skip if missing, zero-dep fallback |
+| gitleaks on its own | Excellent scanner, but you still have to wire and tune it | Wired into `pre-commit`: gitleaks when present, zero-dep pattern fallback when not |
 | Contributor Covenant + docs | Authoritative text, but manual assembly | Assembled, cross-linked, with a response-time table |
 | Dependabot settings UI | One ecosystem at a time, no grouping | Grouped configs for npm/pip/go/cargo/docker; Actions on by default |
 
@@ -287,9 +287,9 @@ Pass either the id or the name to `--only`: `--only 2,05,root-files`.
 
 Blocks, before the commit exists:
 
-- **Secrets** — via [gitleaks](https://github.com/gitleaks/gitleaks), the standard
-  scanner. If it isn't installed the hook warns and skips rather than blocking
-  your work; a dependency-free fallback ships in `.githooks/check-secrets.sh`.
+- **Secrets** — via [gitleaks](https://github.com/gitleaks/gitleaks) when it is
+  installed; the hook otherwise falls back to a dependency-free pattern list, so
+  you're never left unprotected. Both paths live in `.githooks/check-secrets.sh`.
 - **Large files** — anything over 1 MiB (override with `LIMIT_BYTES=...`).
 - **Commit messages** — Conventional Commits; merge/revert/fixup exempt.
 
