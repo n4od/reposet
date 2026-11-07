@@ -21,14 +21,14 @@ const cyan = paint('36');
 
 class UsageError extends Error {}
 
-const HELP = `${bold('repokit')} ${dim('v' + pkg.version)}
+const HELP = `${bold('reposet')} ${dim('v' + pkg.version)}
 
 Add issue forms, PR templates, CI, Dependabot, CodeQL, release notes and
 working git hooks to any repository. Zero dependencies.
 
 ${bold('Usage')}
-  npx repokit init [target] [options]
-  npx repokit list
+  npx reposet init [target] [options]
+  npx reposet list
 
 ${bold('Commands')}
   init [target]     Copy recipes into a repository (default: current directory)
@@ -45,9 +45,9 @@ ${bold('Options')}
   --version, -v     Show the version
 
 ${bold('Examples')}
-  npx repokit init
-  npx repokit init ../my-app --only pr-template,dependabot,root-files
-  npx repokit init . --all --yes
+  npx reposet init
+  npx reposet init ../my-app --only pr-template,dependabot,root-files
+  npx reposet init . --all --yes
 
 ${dim('Made by N4OD — https://github.com/n4od')}
 `;
@@ -153,7 +153,7 @@ function selectByName(list) {
   for (const part of list) {
     const recipe = recipes.resolve(part);
     if (!recipe) {
-      throw new UsageError(`Unknown recipe '${part}'. Run: repokit list`);
+      throw new UsageError(`Unknown recipe '${part}'. Run: reposet list`);
     }
     if (!picked.includes(recipe)) picked.push(recipe);
   }
@@ -312,7 +312,7 @@ async function main(argv) {
     opts = parseArgs(argv);
   } catch (error) {
     console.error(red(`error: ${error.message}`));
-    console.error(dim('Run: repokit --help'));
+    console.error(dim('Run: reposet --help'));
     process.exitCode = 2;
     return;
   }
@@ -346,7 +346,7 @@ async function main(argv) {
   } catch (error) {
     const known = error instanceof UsageError;
     console.error(red(`error: ${error.message}`));
-    if (known) console.error(dim('Run: repokit --help'));
+    if (known) console.error(dim('Run: reposet --help'));
     process.exitCode = known ? 2 : 1;
   }
 }

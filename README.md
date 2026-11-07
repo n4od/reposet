@@ -1,4 +1,4 @@
-# repokit
+# reposet
 
 > The twelve files every repository ends up needing — issue forms, PR template,
 > CI, Dependabot, CodeQL, release notes, code owners, and git hooks that actually
@@ -9,7 +9,7 @@
 ![Platform](https://img.shields.io/badge/platform-Windows%20%7C%20macOS%20%7C%20Linux-lightgrey)
 
 ```bash
-npx repokit init
+npx reposet init
 ```
 
 Most repos don't rot because of bad code. They rot because nobody wrote down how
@@ -44,17 +44,17 @@ decision is yours to make.
 ## 60-second start
 
 ```bash
-npx repokit init
+npx reposet init
 ```
 
 That writes all 11 default recipes into the current repository, **never
 overwriting** a file that already exists.
 
 ```bash
-npx repokit init ../my-app                                  # another folder
-npx repokit init ../my-app --only pr-template,dependabot     # cherry-pick
-npx repokit list                                            # see everything
-npx repokit init . --dry-run                                # plan only
+npx reposet init ../my-app                                  # another folder
+npx reposet init ../my-app --only pr-template,dependabot     # cherry-pick
+npx reposet list                                            # see everything
+npx reposet init . --dry-run                                # plan only
 ```
 
 | Option | What it does |
@@ -138,7 +138,7 @@ outright.
 ```
 .
 ├── bin/
-│   └── repokit.js      ← CLI entry point (npx repokit)
+│   └── reposet.js      ← CLI entry point (npx reposet)
 ├── src/                     ← CLI: arg parsing, recipe manifest, installer
 ├── recipes/                 ← source of truth: cherry-pick ONE concern at a time
 │   ├── 01-issue-forms/
@@ -429,7 +429,7 @@ Rules:
 ### Publishing the CLI
 
 1. `npm login`, then `npm publish`.
-2. Smoke-test: `npx repokit@latest init /tmp/scratch --dry-run`.
+2. Smoke-test: `npx reposet@latest init /tmp/scratch --dry-run`.
 
 `repository`, `bugs`, `homepage` and `author` in `package.json` already point at
 **n4od**; update them if you move the repo.

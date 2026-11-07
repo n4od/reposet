@@ -1,11 +1,11 @@
 {
-  "name": "repokit",
+  "name": "reposet",
   "version": "0.1.0",
   "description": "The twelve files every repository ends up needing: issue forms, PR template, CI, Dependabot, CodeQL, release notes and git hooks. Zero dependencies.",
   "license": "MIT",
   "type": "commonjs",
   "bin": {
-    "repokit": "./bin/repokit.js"
+    "reposet": "./bin/reposet.js"
   },
   "files": [
     "bin",
@@ -38,10 +38,10 @@
   "author": "N4OD <naodtiger@gmail.com> (https://github.com/n4od)",
   "repository": {
     "type": "git",
-    "url": "https://github.com/n4od/repokit.git"
+    "url": "https://github.com/n4od/reposet.git"
   },
   "bugs": {
-    "url": "https://github.com/n4od/repokit/issues"
+    "url": "https://github.com/n4od/reposet/issues"
   },
-  "homepage": "https://github.com/n4od/repokit#readme"
+  "homepage": "https://github.com/n4od/reposet#readme"
 }
