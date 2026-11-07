@@ -48,6 +48,8 @@ ${bold('Examples')}
   npx repox init
   npx repox init ../my-app --only pr-template,dependabot,root-files
   npx repox init . --all --yes
+
+${dim('Made by N4OD — https://github.com/n4od')}
 `;
 
 function printList() {

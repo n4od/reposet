@@ -35,12 +35,13 @@
     "conventional-commits",
     "repo-template"
   ],
+  "author": "N4OD <naodtiger@gmail.com> (https://github.com/n4od)",
   "repository": {
     "type": "git",
-    "url": "https://github.com/OWNER/REPO.git"
+    "url": "https://github.com/n4od/repox.git"
   },
   "bugs": {
-    "url": "https://github.com/OWNER/REPO/issues"
+    "url": "https://github.com/n4od/repox/issues"
   },
-  "homepage": "https://github.com/OWNER/REPO#readme"
+  "homepage": "https://github.com/n4od/repox#readme"
 }

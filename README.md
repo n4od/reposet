@@ -428,9 +428,11 @@ Rules:
 
 ### Publishing the CLI
 
-1. Replace `OWNER/REPO` in `package.json` (`repository`, `bugs`, `homepage`).
-2. `npm login`, then `npm publish`.
-3. Smoke-test: `npx repox@latest init /tmp/scratch --dry-run`.
+1. `npm login`, then `npm publish`.
+2. Smoke-test: `npx repox@latest init /tmp/scratch --dry-run`.
+
+`repository`, `bugs`, `homepage` and `author` in `package.json` already point at
+**n4od**; update them if you move the repo.
 
 `npm pack` runs `scripts/pack-prepare.js` / `pack-clean.js`, because npm drops
 files named `.gitignore` from tarballs. Don't remove that workaround — the
@@ -440,5 +442,9 @@ packaging test in CI exists to catch it if it breaks.
 
 [MIT](LICENSE). The config files are meant to be copied; keep the notice in
 place and you're done.
+
+---
+
+Built by **N4OD** · [github.com/n4od](https://github.com/n4od) · [yegnadevelopers.com](https://yegnadevelopers.com/)
 
 If this saved you an hour, a ⭐ helps other people find it.
