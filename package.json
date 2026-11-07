@@ -1,11 +1,11 @@
 {
-  "name": "repox",
+  "name": "repokit",
   "version": "0.1.0",
   "description": "The twelve files every repository ends up needing: issue forms, PR template, CI, Dependabot, CodeQL, release notes and git hooks. Zero dependencies.",
   "license": "MIT",
   "type": "commonjs",
   "bin": {
-    "repox": "./bin/repox.js"
+    "repokit": "./bin/repokit.js"
   },
   "files": [
     "bin",
@@ -38,10 +38,10 @@
   "author": "N4OD <naodtiger@gmail.com> (https://github.com/n4od)",
   "repository": {
     "type": "git",
-    "url": "https://github.com/n4od/repox.git"
+    "url": "https://github.com/n4od/repokit.git"
   },
   "bugs": {
-    "url": "https://github.com/n4od/repox/issues"
+    "url": "https://github.com/n4od/repokit/issues"
   },
-  "homepage": "https://github.com/n4od/repox#readme"
+  "homepage": "https://github.com/n4od/repokit#readme"
 }

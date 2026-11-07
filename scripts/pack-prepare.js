@@ -2,7 +2,7 @@
 
 /**
  * npm hard-excludes files literally named `.gitignore` from published tarballs,
- * so `npx repox init` would silently install a repo without one.
+ * so `npx repokit init` would silently install a repo without one.
  *
  * Before packing, copy each recipe `.gitignore` to a dotless `gitignore` twin.
  * The installer maps `gitignore` back to `.gitignore` (see src/recipes.js).

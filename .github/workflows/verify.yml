@@ -70,8 +70,8 @@ jobs:
           set -eu
           npm pack --silent > /dev/null
           mkdir -p /tmp/e2e /tmp/target
-          tar -xzf repox-*.tgz -C /tmp/e2e
-          node /tmp/e2e/package/bin/repox.js init /tmp/target --yes
+          tar -xzf repokit-*.tgz -C /tmp/e2e
+          node /tmp/e2e/package/bin/repokit.js init /tmp/target --yes
           test -f /tmp/target/.gitignore
           test -f /tmp/target/.gitattributes
           test -f /tmp/target/.editorconfig
@@ -82,7 +82,7 @@ jobs:
 
       - name: prepack/postpack leaves nothing behind
         run: |
-          rm -f repox-*.tgz
+          rm -f repokit-*.tgz
           if [ -n "$(git status --porcelain)" ]; then
             echo "::error::pack scripts left files in the working tree"
             git status --porcelain
