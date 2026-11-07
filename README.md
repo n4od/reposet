@@ -1,7 +1,8 @@
 # repox
 
-> Repo hygiene in one command — issue forms, PR template, CI, Dependabot,
-> CodeQL, release notes, code owners, and git hooks that actually work on Windows.
+> The twelve files every repository ends up needing — issue forms, PR template,
+> CI, Dependabot, CodeQL, release notes, code owners, and git hooks that actually
+> work on Windows.
 
 [![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 ![Runtime dependencies: none](https://img.shields.io/badge/runtime%20deps-none-brightgreen)
