@@ -436,6 +436,7 @@ Further reading:
 - [docs/releasing.md](docs/releasing.md) — versioning and the publish checklist.
 - [docs/troubleshooting.md](docs/troubleshooting.md) — fixes for common problems.
 - [SECURITY.md](SECURITY.md) — how to report a vulnerability.
+- [CHANGELOG.md](CHANGELOG.md) — what changed in each release.
 
 ### Publishing the CLI
 

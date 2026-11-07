@@ -21,6 +21,7 @@
 - [ ] Generated files stay language-agnostic (no Node/Python/Go assumptions)
 - [ ] No two recipes provide the same path
 - [ ] Docs updated where behaviour changed (README / CONTRIBUTING / docs/)
+- [ ] `CHANGELOG.md` updated under `[Unreleased]` (or there is no user-facing change)
 - [ ] Commits follow Conventional Commits
 
 ## Notes for reviewers

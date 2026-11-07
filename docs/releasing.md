@@ -54,13 +54,25 @@ this automatically, but it caught a real bug once, so it is worth knowing how.
 
 ## Release steps
 
-1. **Bump the version** (this commits and tags locally):
+1. **Update `CHANGELOG.md`.** Move the relevant entries from `[Unreleased]` into
+   a new version section with today's date, then add the comparison links at the
+   bottom:
+
+   ```markdown
+   ## [0.2.0] - 2026-11-20
+   ...
+   [0.2.0]: https://github.com/n4od/reposet/compare/v0.1.0...v0.2.0
+   ```
+
+   Describe recipe changes in plain language — consumers copy those files.
+
+2. **Bump the version** (this commits and tags locally):
 
    ```bash
    npm version patch    # or minor / major
    ```
 
-2. **Publish to npm:**
+3. **Publish to npm:**
 
    ```bash
    npm publish
@@ -68,22 +80,22 @@ this automatically, but it caught a real bug once, so it is worth knowing how.
 
    Complete the 2FA prompt. Expect `+ reposet@X.Y.Z`.
 
-3. **Push the commit and tag:**
+4. **Push the commit and tag:**
 
    ```bash
    git push --follow-tags
    ```
 
-4. **Create the GitHub release** (or use the web UI):
+5. **Create the GitHub release** (or use the web UI):
 
    ```bash
    gh release create vX.Y.Z --generate-notes
    ```
 
    Edit the generated notes so recipe changes are described in plain language,
-   not just commit titles.
+   not just commit titles, and keep them consistent with `CHANGELOG.md`.
 
-5. **Smoke-test the published version:**
+6. **Smoke-test the published version:**
 
    ```bash
    npx reposet@latest --version
