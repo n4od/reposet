@@ -1,7 +1,7 @@
 {
   "name": "reposet",
-  "version": "0.2.0",
-  "description": "The twelve files every repository ends up needing: issue forms, PR template, CI, Dependabot, CodeQL, release notes and git hooks. Zero dependencies.",
+  "version": "0.2.1",
+  "description": "Sets up the boring but important files every new GitHub repo needs: issue forms, PR template, CI, Dependabot, CodeQL, release notes and git hooks. One command, zero dependencies.",
   "license": "MIT",
   "type": "commonjs",
   "bin": {

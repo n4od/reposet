@@ -6,6 +6,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.2.1] - 2026-11-08
+
+### Changed
+
+- The tagline and npm description now lead with the benefit: "Sets up the
+  boring but important files every new GitHub repo needs"
+
 ## [0.2.0] - 2026-11-08
 
 ### Added
@@ -48,6 +55,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   rename it on install
 - Lefthook on Windows failed to parse quoted `run:` blocks, blocking every commit
 
-[Unreleased]: https://github.com/n4od/reposet/compare/v0.2.0...HEAD
+[Unreleased]: https://github.com/n4od/reposet/compare/v0.2.1...HEAD
+[0.2.1]: https://github.com/n4od/reposet/compare/v0.2.0...v0.2.1
 [0.2.0]: https://github.com/n4od/reposet/compare/v0.1.0...v0.2.0
 [0.1.0]: https://github.com/n4od/reposet/releases/tag/v0.1.0

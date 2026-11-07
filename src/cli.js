@@ -28,8 +28,9 @@ const REQUIRED_TOKENS = new Set(
 
 const HELP = `${bold('reposet')} ${dim('v' + pkg.version)}
 
-Add issue forms, PR templates, CI, Dependabot, CodeQL, release notes and
-working git hooks to any repository. Zero dependencies.
+Sets up the boring but important files every new GitHub repo needs: issue
+forms, PR template, CI, Dependabot, CodeQL, release notes and git hooks. Zero
+dependencies.
 
 ${bold('Usage')}
   npx reposet init [target] [options]

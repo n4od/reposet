@@ -1,8 +1,8 @@
 # reposet
 
-> The twelve files every repository ends up needing — issue forms, PR template,
-> CI, Dependabot, CodeQL, release notes, code owners, and git hooks that actually
-> work on Windows.
+> Sets up the boring but important files every new GitHub repo needs.
+> Issue forms, PR template, CI, Dependabot, CodeQL, release notes, code owners,
+> and git hooks — in one command.
 
 [![npm version](https://img.shields.io/npm/v/reposet.svg)](https://www.npmjs.com/package/reposet)
 [![npm downloads](https://img.shields.io/npm/dm/reposet.svg)](https://www.npmjs.com/package/reposet)
