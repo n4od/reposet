@@ -1,6 +1,6 @@
 {
   "name": "reposet",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "The twelve files every repository ends up needing: issue forms, PR template, CI, Dependabot, CodeQL, release notes and git hooks. Zero dependencies.",
   "license": "MIT",
   "type": "commonjs",
