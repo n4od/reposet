@@ -21,14 +21,14 @@ const cyan = paint('36');
 
 class UsageError extends Error {}
 
-const HELP = `${bold('repo-hygiene')} ${dim('v' + pkg.version)}
+const HELP = `${bold('repox')} ${dim('v' + pkg.version)}
 
 Add issue forms, PR templates, CI, Dependabot, CodeQL, release notes and
 working git hooks to any repository. Zero dependencies.
 
 ${bold('Usage')}
-  npx repo-hygiene init [target] [options]
-  npx repo-hygiene list
+  npx repox init [target] [options]
+  npx repox list
 
 ${bold('Commands')}
   init [target]     Copy recipes into a repository (default: current directory)
@@ -45,9 +45,9 @@ ${bold('Options')}
   --version, -v     Show the version
 
 ${bold('Examples')}
-  npx repo-hygiene init
-  npx repo-hygiene init ../my-app --only pr-template,dependabot,root-files
-  npx repo-hygiene init . --all --yes
+  npx repox init
+  npx repox init ../my-app --only pr-template,dependabot,root-files
+  npx repox init . --all --yes
 `;
 
 function printList() {
@@ -151,7 +151,7 @@ function selectByName(list) {
   for (const part of list) {
     const recipe = recipes.resolve(part);
     if (!recipe) {
-      throw new UsageError(`Unknown recipe '${part}'. Run: repo-hygiene list`);
+      throw new UsageError(`Unknown recipe '${part}'. Run: repox list`);
     }
     if (!picked.includes(recipe)) picked.push(recipe);
   }
@@ -310,7 +310,7 @@ async function main(argv) {
     opts = parseArgs(argv);
   } catch (error) {
     console.error(red(`error: ${error.message}`));
-    console.error(dim('Run: repo-hygiene --help'));
+    console.error(dim('Run: repox --help'));
     process.exitCode = 2;
     return;
   }
@@ -344,7 +344,7 @@ async function main(argv) {
   } catch (error) {
     const known = error instanceof UsageError;
     console.error(red(`error: ${error.message}`));
-    if (known) console.error(dim('Run: repo-hygiene --help'));
+    if (known) console.error(dim('Run: repox --help'));
     process.exitCode = known ? 2 : 1;
   }
 }

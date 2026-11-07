@@ -89,7 +89,7 @@ function filesFor(recipe) {
 
 /**
  * Sanity-check the manifest against the folders on disk.
- * Used by the test suite and by `repo-hygiene list --verify`.
+ * Used by the test suite and by `repox list`.
  */
 function validate() {
   const problems = [];

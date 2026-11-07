@@ -1,12 +1,15 @@
-# Repo hygiene kit
+# repox
 
-> The twelve files every repository ends up needing — issue forms, PR template,
-> CI, Dependabot, CodeQL, release notes, code owners, and git hooks that actually
-> work on Windows — in copy-paste form.
+> Repo hygiene in one command — issue forms, PR template, CI, Dependabot,
+> CodeQL, release notes, code owners, and git hooks that actually work on Windows.
 
 [![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 ![Runtime dependencies: none](https://img.shields.io/badge/runtime%20deps-none-brightgreen)
 ![Platform](https://img.shields.io/badge/platform-Windows%20%7C%20macOS%20%7C%20Linux-lightgrey)
+
+```bash
+npx repox init
+```
 
 Most repos don't rot because of bad code. They rot because nobody wrote down how
 to report a bug, what a PR is supposed to contain, which reviewers own which
@@ -40,17 +43,17 @@ decision is yours to make.
 ## 60-second start
 
 ```bash
-npx repo-hygiene init
+npx repox init
 ```
 
 That writes all 11 default recipes into the current repository, **never
 overwriting** a file that already exists.
 
 ```bash
-npx repo-hygiene init ../my-app                                  # another folder
-npx repo-hygiene init ../my-app --only pr-template,dependabot     # cherry-pick
-npx repo-hygiene list                                            # see everything
-npx repo-hygiene init . --dry-run                                # plan only
+npx repox init ../my-app                                  # another folder
+npx repox init ../my-app --only pr-template,dependabot     # cherry-pick
+npx repox list                                            # see everything
+npx repox init . --dry-run                                # plan only
 ```
 
 | Option | What it does |
@@ -134,7 +137,7 @@ outright.
 ```
 .
 ├── bin/
-│   └── repo-hygiene.js      ← CLI entry point (npx repo-hygiene)
+│   └── repox.js      ← CLI entry point (npx repox)
 ├── src/                     ← CLI: arg parsing, recipe manifest, installer
 ├── recipes/                 ← source of truth: cherry-pick ONE concern at a time
 │   ├── 01-issue-forms/
@@ -426,7 +429,7 @@ Rules:
 
 1. Replace `OWNER/REPO` in `package.json` (`repository`, `bugs`, `homepage`).
 2. `npm login`, then `npm publish`.
-3. Smoke-test: `npx repo-hygiene@latest init /tmp/scratch --dry-run`.
+3. Smoke-test: `npx repox@latest init /tmp/scratch --dry-run`.
 
 `npm pack` runs `scripts/pack-prepare.js` / `pack-clean.js`, because npm drops
 files named `.gitignore` from tarballs. Don't remove that workaround — the

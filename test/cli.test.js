@@ -7,7 +7,7 @@ const os = require('node:os');
 const path = require('node:path');
 const { spawnSync } = require('node:child_process');
 
-const BIN = path.join(__dirname, '..', 'bin', 'repo-hygiene.js');
+const BIN = path.join(__dirname, '..', 'bin', 'repox.js');
 const pkg = require('../package.json');
 
 function run(args, options = {}) {
@@ -18,7 +18,7 @@ function run(args, options = {}) {
 }
 
 function tempDir(t) {
-  const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'repo-hygiene-'));
+  const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'repox-'));
   t.after(() => fs.rmSync(dir, { recursive: true, force: true }));
   return dir;
 }
