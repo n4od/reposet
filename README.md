@@ -39,42 +39,64 @@ decision is yours to make.
 
 ## 60-second start
 
-```powershell
-# 1. Copy everything into your repo (or cherry-pick, see below)
-Copy-Item "templates\generic\*" -Destination "C:\path\to\my-repo" -Recurse -Force
-
-# 2. In the target repo: install the hooks (optional but recommended)
-cd C:\path\to\my-repo
-winget install evilmartians.lefthook   # or: scoop / brew / npm i -D lefthook
-lefthook install
+```bash
+npx repo-hygiene init
 ```
+
+That writes all 11 default recipes into the current repository, **never
+overwriting** a file that already exists.
 
 ```bash
-# macOS / Linux equivalent
-cp -r templates/generic/. /path/to/my-repo/
-lefthook install
+npx repo-hygiene init ../my-app                                  # another folder
+npx repo-hygiene init ../my-app --only pr-template,dependabot     # cherry-pick
+npx repo-hygiene list                                            # see everything
+npx repo-hygiene init . --dry-run                                # plan only
 ```
 
-Then spend five minutes on the part only you can do:
+| Option | What it does |
+|---|---|
+| `--only <list>` | Recipe ids or names, comma separated (`02,05` or `pr-template,dependabot`) |
+| `--all` | Every recipe except 12 (this is the default) |
+| `--force, -f` | Overwrite files that already exist |
+| `--dry-run, -n` | Print the plan, write nothing |
+| `--yes, -y` | Never prompt (for scripts and CI) |
+| `--json` | Machine-readable result |
+
+The CLI needs Node 18+ and has **zero dependencies** — no lockfile, no install
+tree, ~70 KB unpacked.
+
+### Then, in the target repo
 
 1. Replace `OWNER/REPO`, `@your-username`, `security@example.com`,
    `conduct@example.com` — [checklist below](#placeholders).
 2. Create the labels the templates reference — [list below](#labels-to-create-once).
-3. Push to your default branch, then check **Issues → New issue** to confirm the
+3. If you took the hooks: `winget install evilmartians.lefthook && lefthook install`.
+4. Push to your default branch, then check **Issues → New issue** to confirm the
    forms render.
 
-That's it. No package to install, no config to generate, no lock-in — it's files
-you own outright.
+The CLI prints these steps for exactly the recipes you chose.
 
-### Cherry-pick instead
+### No Node? Copy the files instead
 
-Every recipe folder mirrors your target repo's layout, so you copy **its contents**,
-not the folder itself. Copying `recipes/02-pr-template/` produces
+Every recipe folder mirrors your target repo's layout, so you copy **its
+contents**, not the folder itself. Copying `recipes/02-pr-template/` produces
 `my-repo/.github/pull_request_template.md`.
 
 ```powershell
+# everything
+Copy-Item "templates\generic\*" -Destination "C:\path\to\my-repo" -Recurse -Force
+
+# or one concern
 Copy-Item "recipes\02-pr-template\*" -Destination "C:\path\to\my-repo" -Recurse -Force
 ```
+
+```bash
+# macOS / Linux
+cp -r templates/generic/. /path/to/my-repo/
+```
+
+No package to install, no config to generate, no lock-in — it's files you own
+outright.
 
 ## Why not just use the defaults?
 
@@ -99,6 +121,11 @@ Copy-Item "recipes\02-pr-template\*" -Destination "C:\path\to\my-repo" -Recurse 
   `sh` is not on your PowerShell `PATH`.
 - `templates/generic/` is generated from `recipes/` and CI fails on drift, so the
   two never disagree.
+- The CLI has a test suite (`node --test`) covering selection, idempotent installs,
+  `--force`, `--dry-run`, `--json`, and usage errors — all run in CI.
+- CI packs the real npm tarball, extracts it, and installs from it, which caught
+  npm silently dropping `.gitignore` from published packages (the CLI ships a
+  packed twin and renames it back).
 
 ---
 
@@ -106,7 +133,10 @@ Copy-Item "recipes\02-pr-template\*" -Destination "C:\path\to\my-repo" -Recurse 
 
 ```
 .
-├── recipes/                 ← cherry-pick ONE concern at a time
+├── bin/
+│   └── repo-hygiene.js      ← CLI entry point (npx repo-hygiene)
+├── src/                     ← CLI: arg parsing, recipe manifest, installer
+├── recipes/                 ← source of truth: cherry-pick ONE concern at a time
 │   ├── 01-issue-forms/
 │   │   └── .github/ISSUE_TEMPLATE/...
 │   ├── 02-pr-template/
@@ -115,12 +145,16 @@ Copy-Item "recipes\02-pr-template\*" -Destination "C:\path\to\my-repo" -Recurse 
 ├── templates/
 │   └── generic/             ← recipes 01–11 merged, ready to drop in whole
 ├── scripts/
-│   └── build-templates.ps1  ← regenerates templates/generic (maintainers)
+│   ├── build-templates.ps1  ← regenerates templates/generic (maintainers)
+│   └── pack-*.js            ← work around npm dropping .gitignore
+├── test/                    ← CLI tests (node --test)
 └── .github/workflows/
     └── verify.yml           ← this repo's CI (not copied to consumers)
 ```
 
 ## Recipes
+
+Pass either the id or the name to `--only`: `--only 2,05,root-files`.
 
 | # | Recipe | Take it when |
 |---|---|---|
@@ -135,7 +169,7 @@ Copy-Item "recipes\02-pr-template\*" -Destination "C:\path\to\my-repo" -Recurse 
 | 09 | [`release-notes`](recipes/09-release-notes) | Anything you version |
 | 10 | [`githooks-lefthook`](recipes/10-githooks-lefthook) | Local safety net before CI |
 | 11 | [`root-files`](recipes/11-root-files) | Always — prevents CRLF and encoding diffs |
-| 12 | [`reusable-workflows`](recipes/12-reusable-workflows) | 3+ repos sharing one pipeline |
+| 12 | [`reusable-workflows`](recipes/12-reusable-workflows) | 3+ repos sharing one pipeline (select explicitly) |
 
 ### If you only do five things
 
@@ -387,6 +421,16 @@ Rules:
 - No two recipes may provide the same path — the build script fails loudly.
 - `12-reusable-workflows` is excluded from the merge because it replaces `06`.
 - `templates/generic/` is never edited by hand.
+
+### Publishing the CLI
+
+1. Replace `OWNER/REPO` in `package.json` (`repository`, `bugs`, `homepage`).
+2. `npm login`, then `npm publish`.
+3. Smoke-test: `npx repo-hygiene@latest init /tmp/scratch --dry-run`.
+
+`npm pack` runs `scripts/pack-prepare.js` / `pack-clean.js`, because npm drops
+files named `.gitignore` from tarballs. Don't remove that workaround — the
+packaging test in CI exists to catch it if it breaks.
 
 ## License
 

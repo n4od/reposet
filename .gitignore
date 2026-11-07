@@ -14,3 +14,7 @@ Thumbs.db
 
 # Node (if you ever add tooling here)
 node_modules/
+
+# Transient copies created by scripts/pack-prepare.js during npm pack
+recipes/*/gitignore
+*.tgz

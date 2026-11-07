@@ -52,12 +52,48 @@ jobs:
           sys.exit(1 if bad else 0)
           PY
 
+  cli:
+    name: CLI tests and real tarball install
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Unit tests
+        run: node --test
+
+      - name: Install from the packed tarball
+        run: |
+          set -eu
+          npm pack --silent > /dev/null
+          mkdir -p /tmp/e2e /tmp/target
+          tar -xzf repo-hygiene-*.tgz -C /tmp/e2e
+          node /tmp/e2e/package/bin/repo-hygiene.js init /tmp/target --yes
+          test -f /tmp/target/.gitignore
+          test -f /tmp/target/.gitattributes
+          test -f /tmp/target/.editorconfig
+          test -f /tmp/target/.github/workflows/ci.yml
+          test -f /tmp/target/.githooks/commit-msg.sh
+          test -x /tmp/target/.githooks/commit-msg.sh
+          echo "tarball install OK"
+
+      - name: prepack/postpack leaves nothing behind
+        run: |
+          rm -f repo-hygiene-*.tgz
+          if [ -n "$(git status --porcelain)" ]; then
+            echo "::error::pack scripts left files in the working tree"
+            git status --porcelain
+            exit 1
+          fi
+
   hooks:
     name: Hook scripts behave
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-
       - name: commit-msg accepts valid messages and rejects invalid ones
         run: |
           set -eu

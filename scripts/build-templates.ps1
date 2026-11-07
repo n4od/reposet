@@ -46,6 +46,9 @@ foreach ($recipe in Get-ChildItem -LiteralPath $recipes -Directory |
                    Where-Object { $exclude -notcontains $_.Name }) {
 
     foreach ($file in Get-ChildItem -LiteralPath $recipe.FullName -Recurse -File -Force) {
+        # Transient twin created by scripts/pack-prepare.js for npm; never merge it.
+        if ($file.Name -eq 'gitignore') { continue }
+
         $rel = $file.FullName.Substring($recipe.FullName.Length + 1)
 
         if ($map.Contains($rel)) {

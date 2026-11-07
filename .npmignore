@@ -1,0 +1,7 @@
+﻿# npm always drops files named .gitignore from tarballs; scripts/pack-prepare.js
+# creates uppercase-safe `gitignore` twins before packing and deletes them after.
+# Explicit exclusions (also covered by the "files" field):
+.github/
+test/
+scripts/
+package-lock.json

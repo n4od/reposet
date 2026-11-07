@@ -1,0 +1,46 @@
+{
+  "name": "repo-hygiene",
+  "version": "0.1.0",
+  "description": "Add issue forms, PR templates, CI, Dependabot, CodeQL, release notes and working git hooks to any repository. Zero dependencies.",
+  "license": "MIT",
+  "type": "commonjs",
+  "bin": {
+    "repo-hygiene": "./bin/repo-hygiene.js"
+  },
+  "files": [
+    "bin",
+    "src",
+    "recipes",
+    "LICENSE"
+  ],
+  "engines": {
+    "node": ">=18"
+  },
+  "scripts": {
+    "test": "node --test",
+    "prepack": "node scripts/pack-prepare.js",
+    "postpack": "node scripts/pack-clean.js"
+  },
+  "keywords": [
+    "github",
+    "templates",
+    "boilerplate",
+    "git-hooks",
+    "lefthook",
+    "github-actions",
+    "issue-templates",
+    "pull-request-template",
+    "dependabot",
+    "codeql",
+    "conventional-commits",
+    "repo-template"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/OWNER/REPO.git"
+  },
+  "bugs": {
+    "url": "https://github.com/OWNER/REPO/issues"
+  },
+  "homepage": "https://github.com/OWNER/REPO#readme"
+}

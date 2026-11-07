@@ -1,0 +1,86 @@
+[
+  {
+    "id": "01",
+    "slug": "issue-forms",
+    "dir": "01-issue-forms",
+    "title": "Issue forms",
+    "description": "Bug and feature request forms, blank issues disabled"
+  },
+  {
+    "id": "02",
+    "slug": "pr-template",
+    "dir": "02-pr-template",
+    "title": "PR template",
+    "description": "Pull request description with change type, testing and checklist"
+  },
+  {
+    "id": "03",
+    "slug": "community-health",
+    "dir": "03-community-health",
+    "title": "Community health",
+    "description": "SECURITY, CONTRIBUTING, CODE_OF_CONDUCT, SUPPORT and FUNDING"
+  },
+  {
+    "id": "04",
+    "slug": "codeowners",
+    "dir": "04-codeowners",
+    "title": "CODEOWNERS",
+    "description": "Automatic review requests by path"
+  },
+  {
+    "id": "05",
+    "slug": "dependabot",
+    "dir": "05-dependabot",
+    "title": "Dependabot",
+    "description": "Grouped dependency update PRs, GitHub Actions enabled"
+  },
+  {
+    "id": "06",
+    "slug": "ci-basic",
+    "dir": "06-ci-basic",
+    "title": "CI skeleton",
+    "description": "Build and test workflow plus a repo hygiene guard job"
+  },
+  {
+    "id": "07",
+    "slug": "security-scan",
+    "dir": "07-security-scan",
+    "title": "CodeQL",
+    "description": "Code scanning on push, pull request and weekly schedule"
+  },
+  {
+    "id": "08",
+    "slug": "stale-and-labeler",
+    "dir": "08-stale-and-labeler",
+    "title": "Stale and labeler",
+    "description": "Stale bot and path-based automatic pull request labels"
+  },
+  {
+    "id": "09",
+    "slug": "release-notes",
+    "dir": "09-release-notes",
+    "title": "Release notes",
+    "description": "Grouped changelog config and a tag-driven release workflow"
+  },
+  {
+    "id": "10",
+    "slug": "githooks-lefthook",
+    "dir": "10-githooks-lefthook",
+    "title": "Git hooks",
+    "description": "Secret scanning, large-file block and Conventional Commits"
+  },
+  {
+    "id": "11",
+    "slug": "root-files",
+    "dir": "11-root-files",
+    "title": "Root files",
+    "description": "editorconfig, gitattributes and gitignore"
+  },
+  {
+    "id": "12",
+    "slug": "reusable-workflows",
+    "dir": "12-reusable-workflows",
+    "title": "Reusable workflows",
+    "description": "One workflow_call CI definition for many repositories"
+  }
+]
