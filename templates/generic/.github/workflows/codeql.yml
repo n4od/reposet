@@ -1,0 +1,55 @@
+name: CodeQL
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  schedule:
+    - cron: "23 4 * * 1" # Mondays 04:23 UTC
+  workflow_dispatch:
+
+permissions:
+  security-events: write
+  contents: read
+  actions: read
+
+jobs:
+  analyze:
+    name: Analyze (${{ matrix.language }})
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    strategy:
+      fail-fast: false
+      matrix:
+        # Uncomment the language(s) your repo uses.
+        # "actions" scans .github/workflows for insecure patterns and is
+        # harmless even in non-code repos — it is enabled by default here.
+        language:
+          - actions
+          # - javascript-typescript
+          # - python
+          # - go
+          # - java-kotlin
+          # - csharp
+          # - cpp
+          # - ruby
+          # - swift
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Initialize CodeQL
+        uses: github/codeql-action/init@v3
+        with:
+          languages: ${{ matrix.language }}
+
+      # Compiled languages need a build; interpreted ones do not.
+      - name: Autobuild
+        if: matrix.language != 'actions'
+        uses: github/codeql-action/autobuild@v3
+
+      - name: Analyze
+        uses: github/codeql-action/analyze@v3
+        with:
+          category: "/language:${{ matrix.language }}"

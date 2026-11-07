@@ -1,0 +1,85 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+# Cancel superseded runs on the same branch / PR instead of queueing them.
+concurrency:
+  group: ci-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+# Least privilege by default. Add scopes only where a job needs them.
+permissions:
+  contents: read
+
+jobs:
+  build:
+    name: Build & test
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      # ── Pick ONE runtime setup and delete the rest ──────────
+      # - uses: actions/setup-node@v4
+      #   with:
+      #     node-version: 20
+      #     cache: npm
+      #
+      # - uses: actions/setup-python@v5
+      #   with:
+      #     python-version: "3.12"
+      #     cache: pip
+      #
+      # - uses: actions/setup-go@v5
+      #   with:
+      #     go-version: "1.22"
+      #     cache: true
+
+      - name: Install dependencies
+        run: |
+          echo "TODO: replace with your install command"
+          # npm ci                          # Node
+          # pip install -r requirements.txt # Python
+          # go mod download                 # Go
+
+      - name: Lint
+        run: |
+          echo "TODO: replace with your lint command"
+          # npx eslint .   # Node
+          # ruff check .   # Python
+          # go vet ./...   # Go
+
+      - name: Test
+        run: |
+          echo "TODO: replace with your test command"
+          # npm test       # Node
+          # pytest -q      # Python
+          # go test ./...  # Go
+
+  # Cheap, language-agnostic guard job. Delete it if it gets in the way.
+  hygiene:
+    name: Repo hygiene
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: No merge conflict markers committed
+        run: |
+          if git grep -nE '^(<<<<<<<|>>>>>>>) ' -- . ':!*.md'; then
+            echo "::error::Merge conflict markers found in the tree"
+            exit 1
+          fi
+          echo "OK"
+
+      - name: No accidental CRLF line endings
+        run: |
+          if git ls-files --eol | grep -E '^i/crlf' | grep -vE '\.(bat|cmd|ps1)$'; then
+            echo "::error::Files committed with CRLF line endings"
+            exit 1
+          fi
+          echo "OK"

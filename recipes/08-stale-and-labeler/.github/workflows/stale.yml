@@ -1,0 +1,52 @@
+name: Stale
+
+on:
+  schedule:
+    - cron: "30 1 * * *" # daily 01:30 UTC
+  workflow_dispatch:
+
+permissions:
+  issues: write
+  pull-requests: write
+
+jobs:
+  stale:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/stale@v9
+        with:
+          # Issues
+          days-before-issue-stale: 60
+          days-before-issue-close: 14
+          # Pull requests
+          days-before-pr-stale: 45
+          days-before-pr-close: 14
+
+          # Create these labels once in the repo (Issues → Labels).
+          stale-issue-label: "stale"
+          stale-pr-label: "stale"
+
+          # Never touch these.
+          exempt-issue-labels: "pinned,security,good first issue"
+          exempt-pr-labels: "pinned,security,work-in-progress"
+
+          # Do not mark issues stale before anyone has triaged them.
+          only-issue-labels: ""
+
+          remove-stale-when-updated: true
+
+          stale-issue-message: >
+            This issue has been automatically marked as stale because it has not
+            had recent activity. It will be closed in 14 days if nothing changes.
+            Comment to keep it open.
+          stale-pr-message: >
+            This pull request has been automatically marked as stale because it
+            has not had recent activity. It will be closed in 14 days if nothing
+            changes.
+          close-issue-message: >
+            Closed as stale. Feel free to reopen it if it is still relevant.
+          close-pr-message: >
+            Closed as stale. Feel free to reopen it if it is still relevant.
+
+          # Dry run first: set to 1 to only log, then switch back to 0.
+          operations-per-run: 100

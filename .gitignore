@@ -1,0 +1,16 @@
+# OS junk
+.DS_Store
+Thumbs.db
+
+# Editors
+.vscode/*
+!.vscode/extensions.json
+.idea/
+*.swp
+
+# Local env
+.env
+.env.*
+
+# Node (if you ever add tooling here)
+node_modules/

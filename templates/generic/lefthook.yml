@@ -1,0 +1,70 @@
+# ─────────────────────────────────────────────────────────────
+# Lefthook — fast, cross-platform git hooks.
+# https://lefthook.dev/configuration/
+#
+# INSTALL (one time per clone):
+#   lefthook install
+#
+# Install the binary:
+#   winget install evilmartians.lefthook      (Windows)
+#   scoop install lefthook                    (Windows)
+#   brew install lefthook                     (macOS/Linux)
+#   npm i -D lefthook                         (any, via npm)
+#   go install github.com/evilmartians/lefthook@latest
+#
+# USEFUL:
+#   lefthook run pre-commit        run hooks manually
+#   LEFTHOOK=0 git commit -m "wip" skip hooks for one command
+#   git commit --no-verify         bypass hooks (git-native escape hatch)
+# ─────────────────────────────────────────────────────────────
+
+# Reject obvious secrets and huge files before they enter history.
+pre-commit:
+  parallel: true
+  commands:
+    secrets:
+      glob: "*"
+      run: sh .githooks/check-secrets.sh {staged_files}
+
+    large-files:
+      run: sh .githooks/check-large-files.sh
+
+    # ── Add your formatter / linter here and delete what you don't use ──
+    # format:
+    #   glob: "*.{js,jsx,ts,tsx,json,css,scss,md}"
+    #   run: npx prettier --write {staged_files}
+    #   stage_fixed: true        # re-stage the formatted files
+    #
+    # lint:
+    #   glob: "*.py"
+    #   run: ruff check --fix {staged_files}
+    #   stage_fixed: true
+    #
+    # fmt:
+    #   glob: "*.go"
+    #   run: gofmt -w {staged_files}
+    #   stage_fixed: true
+
+# Enforce Conventional Commits. Docs: https://www.conventionalcommits.org
+commit-msg:
+  commands:
+    conventional:
+      run: sh .githooks/commit-msg.sh {1}
+
+# Fast safety net before code leaves your machine.
+pre-push:
+  commands:
+    tests:
+      run: 'echo "TODO: replace with your test command, e.g. npm test"'
+      # skip: merge             # skip on merge commits
+      # interactive: true       # confirm before running
+
+# Optional: install dependencies when a lockfile changes after a merge/pull.
+# post-merge:
+#   commands:
+#     deps:
+#       run: |
+#         if git diff-tree -r --name-only --no-commit-id ORIG_HEAD HEAD | grep -qE 'package-lock.json|pnpm-lock.yaml|yarn.lock'; then
+#           echo "lockfile changed -> installing"
+#           npm ci
+#         fi

@@ -1,0 +1,52 @@
+# Maps labels to changed files. Used by .github/workflows/labeler.yml
+# Docs: https://github.com/actions/labeler
+#
+# Pattern syntax:
+#   any-glob-to-any-file  → label if ANY file matches ANY glob
+#   all-globs-to-all-files→ label only if ALL globs match (strict)
+#
+# Create these labels once in the repo (Issues → Labels).
+
+documentation:
+  - changed-files:
+      - any-glob-to-any-file:
+          - "**/*.md"
+          - "docs/**"
+          - "*.md"
+
+ci:
+  - changed-files:
+      - any-glob-to-any-file:
+          - ".github/**"
+
+dependencies:
+  - changed-files:
+      - any-glob-to-any-file:
+          - "package-lock.json"
+          - "pnpm-lock.yaml"
+          - "yarn.lock"
+          - "requirements*.txt"
+          - "poetry.lock"
+          - "Pipfile.lock"
+          - "Cargo.lock"
+          - "go.sum"
+          - "composer.lock"
+
+tests:
+  - changed-files:
+      - any-glob-to-any-file:
+          - "**/*.test.*"
+          - "**/*.spec.*"
+          - "tests/**"
+          - "__tests__/**"
+          - "test/**"
+
+# Example: label anything touching the frontend
+# frontend:
+#   - changed-files:
+#       - any-glob-to-any-file: ["frontend/**", "src/components/**"]
+
+# Example: a breaking label when the lockfile AND package.json change
+# config:
+#   - changed-files:
+#       - any-glob-to-any-file: ["package.json", "tsconfig*.json"]

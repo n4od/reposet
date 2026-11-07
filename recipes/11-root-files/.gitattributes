@@ -1,0 +1,45 @@
+# .gitattributes — how git treats files, and how GitHub renders your repo.
+# Docs: https://git-scm.com/docs/gitattributes
+
+# Normalize line endings to LF in the repo, regardless of the OS.
+* text=auto eol=lf
+
+# Windows-only scripts keep CRLF so cmd/PowerShell behave.
+*.bat text eol=crlf
+*.cmd text eol=crlf
+*.ps1 text eol=crlf
+
+# Shell scripts must stay LF, and hooks must stay executable.
+*.sh text eol=lf
+
+# Binary files: never diff, never merge, never convert.
+*.png  binary
+*.jpg  binary
+*.jpeg binary
+*.gif  binary
+*.ico  binary
+*.webp binary
+*.pdf  binary
+*.zip  binary
+*.gz   binary
+*.7z   binary
+*.woff binary
+*.woff2 binary
+
+# Generated files: collapse diffs and hide from language stats on GitHub.
+*.min.js   linguist-generated=true -diff
+*.min.css  linguist-generated=true -diff
+dist/**    linguist-generated=true
+build/**   linguist-generated=true
+package-lock.json linguist-generated=true
+pnpm-lock.yaml    linguist-generated=true
+yarn.lock         linguist-generated=true
+poetry.lock       linguist-generated=true
+Cargo.lock        linguist-generated=true
+
+# Third-party / vendored code shouldn't skew your language breakdown.
+vendor/**  linguist-vendored
+third_party/** linguist-vendored
+
+# Keep the repo's language stats honest when docs dominate.
+*.md linguist-documentation

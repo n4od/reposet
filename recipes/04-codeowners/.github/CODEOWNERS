@@ -1,0 +1,27 @@
+# CODEOWNERS — who is automatically requested to review what.
+# Docs: https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/customizing-your-repository/about-code-owners
+#
+# Location: .github/CODEOWNERS (repo root or docs/ also work).
+# Rules are evaluated bottom-up; the LAST matching pattern wins.
+# Replace @your-username with real users or @org/team.
+
+# Default owner for everything not matched below.
+*                       @your-username
+
+# Repo plumbing
+/.github/               @your-username
+
+# Documentation
+*.md                    @your-username
+/docs/                  @your-username
+
+# ── Split ownership example ───────────────────────────────────
+# /frontend/            @your-org/frontend-team
+# /backend/             @your-org/backend-team
+# /infra/               @your-org/platform-team
+# /migrations/          @your-org/dba-team
+
+# ── Critical files: require a specific reviewer ───────────────
+# /SECURITY.md          @your-username
+# /package.json         @your-username
+# /.github/workflows/   @your-username

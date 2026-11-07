@@ -1,0 +1,66 @@
+name: Release
+
+# Tag-driven release. Push a tag like v1.2.0 to publish.
+# Docs: https://docs.github.com/en/repositories/releasing-projects-on-github
+
+on:
+  push:
+    tags:
+      - "v*.*.*"
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: "Existing tag to (re-)release, e.g. v1.2.0"
+        required: true
+        type: string
+
+permissions:
+  contents: write # needed to create the release
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0 # full history so generated notes can diff tags
+
+      - name: Resolve tag
+        id: tag
+        run: |
+          TAG="${{ inputs.tag || github.ref_name }}"
+          echo "name=$TAG" >> "$GITHUB_OUTPUT"
+
+      - name: Build artifacts
+        run: |
+          echo "TODO: replace with your build command"
+          # npm run build          |  python -m build  |  go build ./...
+
+      - name: Create GitHub Release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh release create "${{ steps.tag.outputs.name }}" \
+            --verify-tag \
+            --title "${{ steps.tag.outputs.name }}" \
+            --generate-notes
+          # Add: --draft            to publish as a draft
+          # Add: --prerelease       for release candidates
+          # Add: dist/*             to upload build artifacts
+          # Add: --notes-file CHANGELOG.md   to use a fixed body
+
+# ─────────────────────────────────────────────────────────────
+# Optional: also publish to a registry on tag push.
+# Keep it in a separate job so a failed publish never blocks the release.
+#
+#  publish:
+#    needs: release
+#    runs-on: ubuntu-latest
+#    permissions:
+#      contents: read
+#      id-token: write        # for npm provenance / PyPI trusted publishing
+#    steps:
+#      - uses: actions/checkout@v4
+#      - run: echo "TODO: publish step"
+# ─────────────────────────────────────────────────────────────

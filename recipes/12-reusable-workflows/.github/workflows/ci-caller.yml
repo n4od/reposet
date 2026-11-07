@@ -1,0 +1,30 @@
+name: CI
+
+# Example CALLER for ./github/workflows/reusable-ci.yml
+# Compare this (~10 lines of real logic) with the full ci.yml recipe.
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  node:
+    uses: ./.github/workflows/reusable-ci.yml
+    with:
+      node-version: "20"
+      install-command: "echo TODO: npm ci"
+      test-command: "echo TODO: npm test"
+    # secrets: inherit   # uncomment to pass all caller secrets through
+
+  # A second caller with different inputs — monorepo package, or a different stack.
+  # python:
+  #   uses: ./.github/workflows/reusable-ci.yml
+  #   with:
+  #     working-directory: "./backend"
+  #     install-command: "pip install -r requirements.txt"
+  #     test-command: "pytest -q"

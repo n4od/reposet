@@ -1,0 +1,17 @@
+# Adds a "Sponsor" button to the repository.
+# Docs: https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/customizing-your-repository/displaying-a-sponsor-button-in-your-repository
+
+# Up to 4 GitHub Sponsors usernames (no @)
+github: your-username
+
+# Other platforms — uncomment what you use
+# patreon: your-handle
+# open_collective: your-project
+# ko_fi: your-handle
+# tidelift: npm/your-package
+# liberapay: your-handle
+# issuehunt: your-handle
+# polar: your-handle
+# buy_me_a_coffee: your-handle
+# thanks_dev: u/gh/your-handle
+# custom: ["https://your-site.com/donate", "https://example.com/sponsor"]

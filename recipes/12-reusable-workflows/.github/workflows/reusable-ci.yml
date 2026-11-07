@@ -1,0 +1,75 @@
+name: Reusable CI
+
+# A reusable workflow: define the pipeline ONCE, call it from many places.
+# Docs: https://docs.github.com/en/actions/using-workflows/reusing-workflows
+#
+# Call it from the same repo:
+#   jobs:
+#     ci:
+#       uses: ./.github/workflows/reusable-ci.yml
+#
+# Call it from another repo (must be public, or same org with access):
+#   jobs:
+#     ci:
+#       uses: your-org/your-repo/.github/workflows/reusable-ci.yml@v1
+#
+# Always pin @branch to a tag or commit SHA — not @main.
+
+on:
+  workflow_call:
+    inputs:
+      working-directory:
+        description: Directory to run commands in
+        required: false
+        type: string
+        default: "."
+      install-command:
+        description: Command that installs dependencies
+        required: false
+        type: string
+        default: "echo 'no install step configured'"
+      test-command:
+        description: Command that runs the tests
+        required: false
+        type: string
+        default: "echo 'no test step configured'"
+      node-version:
+        description: Node version to install (empty = skip setup)
+        required: false
+        type: string
+        default: ""
+    outputs:
+      test-result:
+        description: Outcome of the test step
+        value: ${{ jobs.ci.outputs.test-result }}
+
+# A called workflow cannot have more permissions than the caller grants.
+permissions:
+  contents: read
+
+jobs:
+  ci:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    defaults:
+      run:
+        working-directory: ${{ inputs.working-directory }}
+    outputs:
+      test-result: ${{ steps.test.outcome }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        if: inputs.node-version != ''
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ inputs.node-version }}
+          cache: npm
+
+      - name: Install dependencies
+        run: ${{ inputs.install-command }}
+
+      - name: Test
+        id: test
+        run: ${{ inputs.test-command }}

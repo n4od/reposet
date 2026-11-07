@@ -1,0 +1,67 @@
+# Dependabot — automated dependency update pull requests.
+# Docs: https://docs.github.com/en/code-security/dependabot/dependabot-version-updates/configuration-options-for-the-dependabot.yml-file
+#
+# This file ships with only the github-actions ecosystem enabled, because
+# that one is useful in EVERY repository. Uncomment the stack you actually use.
+
+version: 2
+
+updates:
+  # Keeps action versions in .github/workflows/* fresh (and pinned SHAs updated).
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+    groups:
+      actions:
+        patterns: ["*"]
+    commit-message:
+      prefix: "ci"
+
+  # ── Node / TypeScript ────────────────────────────────────────
+  # - package-ecosystem: "npm"
+  #   directory: "/"
+  #   schedule:
+  #     interval: "weekly"
+  #   open-pull-requests-limit: 5
+  #   groups:
+  #     dev-dependencies:
+  #       dependency-type: "development"
+  #     production-dependencies:
+  #       dependency-type: "production"
+  #   commit-message:
+  #     prefix: "chore"
+  #     include: "scope"
+
+  # ── Python ───────────────────────────────────────────────────
+  # - package-ecosystem: "pip"
+  #   directory: "/"
+  #   schedule:
+  #     interval: "weekly"
+  #   groups:
+  #     python:
+  #       patterns: ["*"]
+
+  # ── Go ───────────────────────────────────────────────────────
+  # - package-ecosystem: "gomod"
+  #   directory: "/"
+  #   schedule:
+  #     interval: "weekly"
+
+  # ── Rust ─────────────────────────────────────────────────────
+  # - package-ecosystem: "cargo"
+  #   directory: "/"
+  #   schedule:
+  #     interval: "weekly"
+
+  # ── Docker ───────────────────────────────────────────────────
+  # - package-ecosystem: "docker"
+  #   directory: "/"
+  #   schedule:
+  #     interval: "weekly"
+
+  # ── GitHub Actions used in a subfolder (monorepo) ────────────
+  # - package-ecosystem: "github-actions"
+  #   directory: "/packages/app"
+  #   schedule:
+  #     interval: "weekly"
