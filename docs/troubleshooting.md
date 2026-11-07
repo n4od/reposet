@@ -131,6 +131,25 @@ npx reposet init . --dry-run
 npx reposet init . --yes --json     # machine-readable plan for CI
 ```
 
+### Placeholders are still in the files
+
+`init` fills them from the target's git remote and `git config user.email`. If
+it could not detect a value (or you used `--no-fill`), pass them explicitly:
+
+```bash
+npx reposet init . --owner acme --repo widget --email dev@acme.dev
+```
+
+`reposet check .` lists exactly what is left, with file and line, and exits `1`
+while a required placeholder remains — so it works as a CI gate:
+
+```bash
+npx reposet check .
+```
+
+The commented `your-org` examples are optional: they are reported but do not
+fail the check.
+
 ### Exit codes
 
 | Code | Meaning |

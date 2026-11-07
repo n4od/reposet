@@ -71,7 +71,9 @@ node /tmp/e2e/package/bin/reposet.js init /tmp/target --yes
 2. **Add the files**, mirroring the target repo layout exactly.
 3. **Register it** in `src/recipes.json` (`id`, `slug`, `dir`, `title`,
    `description`).
-4. **Regenerate the merged templates** (required — CI fails on drift):
+4. **Register any placeholders** the recipe introduces in
+   `src/placeholders.json`; `init` fills them and `reposet check` reports them.
+5. **Regenerate the merged templates** (required — CI fails on drift):
 
    ```powershell
    # Windows
@@ -84,9 +86,9 @@ node /tmp/e2e/package/bin/reposet.js init /tmp/target --yes
    pwsh -NoProfile -File ./scripts/build-templates.ps1 -Check
    ```
 
-5. **Add a row** to the recipe table in `README.md` and, if the recipe is
+6. **Add a row** to the recipe table in `README.md` and, if the recipe is
    optional or has prerequisites, a short `<details>` block.
-6. **Decide the default.** Recipes are included by default except `12`. If yours
+7. **Decide the default.** Recipes are included by default except `12`. If yours
    is an alternative to an existing recipe, add it to `ALTERNATIVES` in
    `src/recipes.js` and exclude it from `DEFAULT_IDS`.
 

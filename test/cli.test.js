@@ -150,3 +150,169 @@ test('packaged gitignore twin installs under its real name', () => {
   assert.strictEqual(recipes.installPath('.githooks/commit-msg.sh'), '.githooks/commit-msg.sh');
   assert.strictEqual(recipes.installPath('lefthook.yml'), 'lefthook.yml');
 });
+
+// ------------------------------------------------------------ placeholders ----
+
+test('init fills placeholders from flags', (t) => {
+  const target = tempDir(t);
+  const result = run([
+    'init', target, '--only', '3,4',
+    '--owner', 'acme', '--repo', 'widget', '--user', 'alice', '--email', 'dev@acme.test',
+    '--yes',
+  ]);
+  assert.strictEqual(result.status, 0, result.stderr);
+
+  const security = fs.readFileSync(path.join(target, '.github', 'SECURITY.md'), 'utf8');
+  assert.match(security, /github\.com\/acme\/widget/);
+  assert.match(security, /dev@acme\.test/);
+  assert.doesNotMatch(security, /OWNER\/REPO|security@example\.com/);
+
+  const codeowners = fs.readFileSync(path.join(target, '.github', 'CODEOWNERS'), 'utf8');
+  assert.match(codeowners, /@alice/);
+  assert.doesNotMatch(codeowners, /your-username/);
+});
+
+test('does not substitute tokens inside longer words', (t) => {
+  const target = tempDir(t);
+  run([
+    'init', target, '--only', '4',
+    '--owner', 'acme', '--repo', 'widget', '--user', 'alice',
+    '--yes',
+  ]);
+
+  const text = fs.readFileSync(path.join(target, '.github', 'CODEOWNERS'), 'utf8');
+  assert.match(text, /CODEOWNERS/);
+  assert.doesNotMatch(text, /CODEacmeS|CODEaliceS/);
+  assert.match(text, /@alice/);
+});
+
+test('recipes without placeholders get no placeholder hints', (t) => {
+  const target = tempDir(t);
+  const result = run(['init', target, '--only', '02', '--yes']);
+  assert.strictEqual(result.status, 0, result.stderr);
+  assert.doesNotMatch(result.stdout, /reposet check/);
+  assert.doesNotMatch(result.stdout, /placeholders? filled/);
+});
+
+test('--no-fill leaves placeholders untouched', (t) => {
+  const target = tempDir(t);
+  const result = run([
+    'init', target, '--only', '3',
+    '--owner', 'acme', '--repo', 'widget', '--email', 'dev@acme.test',
+    '--no-fill', '--yes',
+  ]);
+  assert.strictEqual(result.status, 0, result.stderr);
+
+  const security = fs.readFileSync(path.join(target, '.github', 'SECURITY.md'), 'utf8');
+  assert.match(security, /security@example\.com/);
+  assert.match(security, /OWNER\/REPO/);
+});
+
+test('check exits 1 when required placeholders remain', (t) => {
+  const target = tempDir(t);
+  run(['init', target, '--only', '3', '--no-fill', '--yes']);
+
+  const result = run(['check', target]);
+  assert.strictEqual(result.status, 1, result.stderr);
+  assert.match(result.stdout, /security@example\.com/);
+  assert.match(result.stdout, /OWNER\/REPO/);
+});
+
+test('check exits 0 once placeholders are filled', (t) => {
+  const target = tempDir(t);
+  run([
+    'init', target, '--only', '3',
+    '--owner', 'acme', '--repo', 'widget', '--user', 'alice', '--email', 'dev@acme.test',
+    '--yes',
+  ]);
+
+  const result = run(['check', target]);
+  assert.strictEqual(result.status, 0, result.stdout + result.stderr);
+});
+
+test('check exits 0 when only optional examples remain', (t) => {
+  const target = tempDir(t);
+  run([
+    'init', target, '--only', '4',
+    '--owner', 'acme', '--repo', 'widget', '--user', 'alice',
+    '--yes',
+  ]);
+
+  const result = run(['check', target]);
+  assert.strictEqual(result.status, 0, result.stdout + result.stderr);
+  assert.match(result.stdout, /optional/i);
+});
+
+test('check --json reports remaining placeholders', (t) => {
+  const target = tempDir(t);
+  run(['init', target, '--only', '1', '--no-fill', '--yes']);
+
+  const result = run(['check', target, '--json']);
+  assert.strictEqual(result.status, 1);
+
+  const parsed = JSON.parse(result.stdout);
+  assert.strictEqual(parsed.ok, false);
+  assert.ok(parsed.placeholders.length > 0);
+  assert.ok(parsed.counts['OWNER/REPO'] >= 1);
+});
+
+test('init detects owner and repo from the git remote', (t) => {
+  const target = tempDir(t);
+  spawnSync('git', ['init', '-q'], { cwd: target });
+  spawnSync('git', ['remote', 'add', 'origin', 'https://github.com/acme/widget.git'], { cwd: target });
+
+  const result = run(['init', target, '--only', '3', '--yes']);
+  assert.strictEqual(result.status, 0, result.stderr);
+
+  const security = fs.readFileSync(path.join(target, '.github', 'SECURITY.md'), 'utf8');
+  assert.match(security, /github\.com\/acme\/widget/);
+  assert.doesNotMatch(security, /OWNER\/REPO/);
+});
+
+test('placeholder filling does not modify existing files', (t) => {
+  const target = tempDir(t);
+  const file = path.join(target, '.github', 'SECURITY.md');
+  fs.mkdirSync(path.dirname(file), { recursive: true });
+  fs.writeFileSync(file, 'keep security@example.com\n');
+
+  const result = run([
+    'init', target, '--only', '3',
+    '--owner', 'acme', '--repo', 'widget', '--email', 'dev@acme.test',
+    '--yes',
+  ]);
+  assert.strictEqual(result.status, 0, result.stderr);
+  assert.strictEqual(fs.readFileSync(file, 'utf8'), 'keep security@example.com\n');
+});
+
+test('--dry-run reports filled placeholders but writes nothing', (t) => {
+  const target = tempDir(t);
+  const result = run([
+    'init', target, '--only', '3',
+    '--owner', 'acme', '--repo', 'widget', '--email', 'dev@acme.test',
+    '--dry-run', '--yes',
+  ]);
+  assert.strictEqual(result.status, 0, result.stderr);
+  assert.deepStrictEqual(fs.readdirSync(target), []);
+  assert.match(result.stdout, /placeholders filled/);
+});
+
+test('--json includes placeholder counts', (t) => {
+  const target = tempDir(t);
+  const result = run(['init', target, '--only', '3', '--no-fill', '--yes', '--json']);
+  assert.strictEqual(result.status, 0, result.stderr);
+
+  const parsed = JSON.parse(result.stdout);
+  assert.strictEqual(parsed.counts.filled, 0);
+  assert.ok(Object.keys(parsed.counts.remaining).length > 0);
+});
+
+test('parses the common git remote URL shapes', () => {
+  const { parseRemote } = require('../src/placeholders');
+
+  assert.deepStrictEqual(parseRemote('https://github.com/acme/widget.git'), { owner: 'acme', repo: 'widget' });
+  assert.deepStrictEqual(parseRemote('git@github.com:acme/widget.git'), { owner: 'acme', repo: 'widget' });
+  assert.deepStrictEqual(parseRemote('ssh://git@github.com/acme/widget'), { owner: 'acme', repo: 'widget' });
+  assert.deepStrictEqual(parseRemote('git+https://github.com/acme/widget.git'), { owner: 'acme', repo: 'widget' });
+  assert.strictEqual(parseRemote('https://gitlab.com/acme/widget.git'), null);
+  assert.strictEqual(parseRemote('https://notgithub.com/acme/widget.git'), null);
+});

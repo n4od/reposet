@@ -1,0 +1,11 @@
+[
+  { "token": "OWNER/REPO", "field": "repoFull", "required": true },
+  { "token": "@your-username", "field": "user", "prefix": "@", "required": true },
+  { "token": "your-username", "field": "user", "required": true },
+  { "token": "your-org/your-repo", "field": "repoFull", "required": false },
+  { "token": "your-org", "field": "org", "required": false },
+  { "token": "security@example.com", "field": "securityEmail", "required": true },
+  { "token": "conduct@example.com", "field": "conductEmail", "required": true },
+  { "token": "OWNER", "field": "owner", "required": true },
+  { "token": "REPO", "field": "repo", "required": true }
+]

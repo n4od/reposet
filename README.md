@@ -55,6 +55,8 @@ overwriting** a file that already exists.
 ```bash
 npx reposet init ../my-app                                  # another folder
 npx reposet init ../my-app --only pr-template,dependabot     # cherry-pick
+npx reposet init . --owner acme --repo widget --email dev@acme.dev
+npx reposet check .                                         # list leftover placeholders
 npx reposet list                                            # see everything
 npx reposet init . --dry-run                                # plan only
 ```
@@ -68,13 +70,32 @@ npx reposet init . --dry-run                                # plan only
 | `--yes, -y` | Never prompt (for scripts and CI) |
 | `--json` | Machine-readable result |
 
+Placeholders are filled in every file `init` writes. Values come from the
+target's git remote (`owner/repo`), `GITHUB_REPOSITORY`, `git config user.email`,
+and `GITHUB_ACTOR`; override them when detection isn't right:
+
+| Placeholder option | Fills |
+|---|---|
+| `--owner <name>` | `OWNER` / `OWNER/REPO` |
+| `--repo <name>` | `REPO` / `OWNER/REPO` |
+| `--user <handle>` | `@your-username` (defaults to the owner) |
+| `--org <name>` | The commented `your-org` examples |
+| `--email <addr>` | `security@example.com` and `conduct@example.com` |
+| `--security-email <addr>` | Just the security contact |
+| `--conduct-email <addr>` | Just the conduct contact |
+| `--no-fill` | Leave every placeholder untouched |
+
+`npx reposet check .` reports anything still left and exits `1` when a required
+placeholder remains — useful as a CI gate.
+
 The CLI needs Node 18+ and has **zero dependencies** — no lockfile, no install
 tree, ~70 KB unpacked.
 
 ### Then, in the target repo
 
-1. Replace `OWNER/REPO`, `@your-username`, `security@example.com`,
-   `conduct@example.com` — [checklist below](#placeholders).
+1. Fill any leftover placeholders — `OWNER/REPO`, `@your-username`, the example
+   emails. `init` fills them automatically when it can; `npx reposet check .`
+   lists whatever remains ([reference below](#placeholders)).
 2. Create the labels the templates reference — [list below](#labels-to-create-once).
 3. If you took the hooks: `winget install evilmartians.lefthook && lefthook install`.
 4. Push to your default branch, then check **Issues → New issue** to confirm the
@@ -128,7 +149,8 @@ outright.
 - `templates/generic/` is generated from `recipes/` and CI fails on drift, so the
   two never disagree.
 - The CLI has a test suite (`node --test`) covering selection, idempotent installs,
-  `--force`, `--dry-run`, `--json`, and usage errors — all run in CI.
+  `--force`, `--dry-run`, `--json`, placeholder filling and `check`, and usage
+  errors — all run in CI.
 - CI packs the real npm tarball, extracts it, and installs from it, which caught
   npm silently dropping `.gitignore` from published packages (the CLI ships a
   packed twin and renames it back).
@@ -141,7 +163,7 @@ outright.
 .
 ├── bin/
 │   └── reposet.js      ← CLI entry point (npx reposet)
-├── src/                     ← CLI: arg parsing, recipe manifest, installer
+├── src/                     ← CLI: args, recipes, placeholders, installer
 ├── recipes/                 ← source of truth: cherry-pick ONE concern at a time
 │   ├── 01-issue-forms/
 │   │   └── .github/ISSUE_TEMPLATE/...
@@ -359,14 +381,26 @@ gh label create "needs-triage" --color "fbca04"
 
 ## Placeholders
 
-| Placeholder | Appears in |
-|---|---|
-| `OWNER/REPO` | `ISSUE_TEMPLATE/config.yml`, `SECURITY.md`, `SUPPORT.md`, `CONTRIBUTING.md` |
-| `@your-username` | `CODEOWNERS`, `FUNDING.yml`, issue form `assignees` |
-| `security@example.com` | `SECURITY.md` |
-| `conduct@example.com` | `CODE_OF_CONDUCT.md` |
-| `your-username` | `FUNDING.yml` |
-| `TODO:` | every workflow — deliberate |
+`init` fills these in every file it writes:
+
+| Placeholder | Replaced with | Appears in |
+|---|---|---|
+| `OWNER/REPO` | `owner/repo` | `ISSUE_TEMPLATE/config.yml`, `SECURITY.md`, `SUPPORT.md`, `CONTRIBUTING.md` |
+| `OWNER`, `REPO` | owner / repo | the same URLs, plus `cd REPO` |
+| `@your-username`, `your-username` | `@handle` / `handle` | `CODEOWNERS`, `FUNDING.yml`, issue-form `assignees` |
+| `security@example.com` | `--email` | `SECURITY.md` |
+| `conduct@example.com` | `--email` | `CODE_OF_CONDUCT.md` |
+| `your-org`, `your-org/your-repo` | optional (`--org`) | commented examples in `CODEOWNERS` and `reusable-ci.yml` |
+| `TODO:` | **never touched** | every workflow — deliberate |
+
+Values are detected from the target's git remote (`owner/repo`),
+`GITHUB_REPOSITORY`, `git config user.email` and `GITHUB_ACTOR`. Override with
+`--owner`, `--repo`, `--user`, `--org`, `--email`, `--security-email`,
+`--conduct-email`, or skip the whole step with `--no-fill`.
+
+`reposet check .` scans only files the recipes install, prints each placeholder
+with its file and line, and exits `1` when a required one remains. The commented
+`your-org` examples are reported but do not fail the check.
 
 ---
 

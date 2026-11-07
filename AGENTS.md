@@ -8,10 +8,11 @@ lockfile, no runtime deps.
 ## Commands
 
 ```bash
-node --test                                   # all 14 tests
+node --test                                   # all tests
 node --test test/cli.test.js                  # one file
 node --test --test-name-pattern "tarball"     # one test by name
 node bin/reposet.js init <dir> --yes --dry-run
+node bin/reposet.js check <dir>
 node bin/reposet.js list
 ```
 
@@ -62,8 +63,9 @@ On Windows PowerShell, `npm.ps1` may be blocked by execution policy — use
 1. Add/change files under `recipes/NN-slug/`, mirroring the target layout.
 2. Register it in `src/recipes.json` (`id`, `slug`, `dir`, `title`, `description`).
 3. Regenerate `templates/generic/` with the build script (`-Check` must pass).
-4. Add the row to the README recipe table; update `CHANGELOG.md` `[Unreleased]`.
-5. Run `node --test`.
+4. If the recipe contains placeholders, register them in `src/placeholders.json`.
+5. Add the row to the README recipe table; update `CHANGELOG.md` `[Unreleased]`.
+6. Run `node --test`.
 
 ## Root `.github/` vs recipes
 
@@ -82,6 +84,20 @@ and the recipe copies contain `OWNER/REPO`-style placeholders.
   `LICENSE` ship (plus npm's automatic README/package.json). `docs/`, `test/`,
   `scripts/`, `.github/` are excluded. Confirm with `npm pack` before assuming a
   file is published.
+
+## Placeholders
+
+- `src/placeholders.json` is the token list; `src/placeholders.js` fills and
+  scans. Tokens are matched longest-first in a single pass, so `OWNER/REPO` and
+  `@your-username` win over `OWNER` and `your-username`.
+- Substitution only touches files `apply()` actually writes (create/overwrite) —
+  never skipped files, never binary files. `TODO` is deliberately not a token.
+- Defaults prefer the target's git remote, then `GITHUB_REPOSITORY`, plus
+  `git config user.email` and `GITHUB_ACTOR`.
+- `reposet check` scans only paths a recipe can install, so it can't
+  false-positive on unrelated code. Tokens marked `required: false` (the
+  commented `your-org` examples) are reported but do not fail the check.
+- New placeholders go in `src/placeholders.json` and need a test.
 
 ## Git-hook quirks
 
