@@ -1,15 +1,108 @@
-# .github & Git hooks — template kit
+# Repo hygiene kit
 
-Copy-paste templates for the repo plumbing every project ends up needing:
-issue forms, PR templates, CI, Dependabot, security policy, code owners,
-release notes, and git hooks that actually run on Windows.
+> The twelve files every repository ends up needing — issue forms, PR template,
+> CI, Dependabot, CodeQL, release notes, code owners, and git hooks that actually
+> work on Windows — in copy-paste form.
 
-Nothing here is language-specific. Every file has `TODO` comments where you
-need to make a decision.
+[![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
+![Runtime dependencies: none](https://img.shields.io/badge/runtime%20deps-none-brightgreen)
+![Platform](https://img.shields.io/badge/platform-Windows%20%7C%20macOS%20%7C%20Linux-lightgrey)
+
+Most repos don't rot because of bad code. They rot because nobody wrote down how
+to report a bug, what a PR is supposed to contain, which reviewers own which
+folder, or where CI lives. So every new project starts with the same hour of
+copying files from the last one.
+
+This kit is that hour, done once, for any stack.
+
+Nothing here is language-specific. Every file has `TODO` comments where a
+decision is yours to make.
 
 ---
 
-## How this folder works
+## What's in the box
+
+| Concern | Files |
+|---|---|
+| Issue intake | Bug + feature forms, blank issues disabled, contact links |
+| PRs | Template with change type, test evidence, checklist |
+| Community health | `SECURITY.md`, `CONTRIBUTING.md`, `CODE_OF_CONDUCT.md`, `SUPPORT.md`, `FUNDING.yml` |
+| Ownership | `CODEOWNERS` with per-path reviewers |
+| Dependencies | `dependabot.yml` with grouping, Actions enabled by default |
+| CI | Workflow skeleton + language-agnostic hygiene job (conflict markers, CRLF) |
+| Security | CodeQL scanning on push, PR, and weekly |
+| Triage | Stale bot + path-based auto-labeling |
+| Releases | Grouped auto-generated notes + tag→release workflow |
+| Git hooks | Secret scan (gitleaks), large-file block, Conventional Commits |
+| Repo config | `.editorconfig`, `.gitattributes`, `.gitignore` |
+| Scale-out | Reusable `workflow_call` CI for many repos |
+
+## 60-second start
+
+```powershell
+# 1. Copy everything into your repo (or cherry-pick, see below)
+Copy-Item "templates\generic\*" -Destination "C:\path\to\my-repo" -Recurse -Force
+
+# 2. In the target repo: install the hooks (optional but recommended)
+cd C:\path\to\my-repo
+winget install evilmartians.lefthook   # or: scoop / brew / npm i -D lefthook
+lefthook install
+```
+
+```bash
+# macOS / Linux equivalent
+cp -r templates/generic/. /path/to/my-repo/
+lefthook install
+```
+
+Then spend five minutes on the part only you can do:
+
+1. Replace `OWNER/REPO`, `@your-username`, `security@example.com`,
+   `conduct@example.com` — [checklist below](#placeholders).
+2. Create the labels the templates reference — [list below](#labels-to-create-once).
+3. Push to your default branch, then check **Issues → New issue** to confirm the
+   forms render.
+
+That's it. No package to install, no config to generate, no lock-in — it's files
+you own outright.
+
+### Cherry-pick instead
+
+Every recipe folder mirrors your target repo's layout, so you copy **its contents**,
+not the folder itself. Copying `recipes/02-pr-template/` produces
+`my-repo/.github/pull_request_template.md`.
+
+```powershell
+Copy-Item "recipes\02-pr-template\*" -Destination "C:\path\to\my-repo" -Recurse -Force
+```
+
+## Why not just use the defaults?
+
+| The obvious option | Where it stops | What this adds |
+|---|---|---|
+| The green **"Configure"** button (`actions/starter-workflows`) | Language CI only — nothing for issues, PRs, ownership, releases | One coherent set across 12 concerns, named consistently |
+| `.gitignore` generators | Only `.gitignore` | `.editorconfig` + `.gitattributes`, which kill CRLF and lockfile diff noise |
+| Husky | Requires Node in every repo that uses it | Lefthook: one binary, any stack, no Node |
+| Hand-rolled `.git/hooks` | Never reaches teammates — `.git/` isn't committed | `lefthook install` and committed config |
+| gitleaks on its own | Excellent scanner, but you still have to wire and tune it | Wired into `pre-commit`, graceful skip if missing, zero-dep fallback |
+| Contributor Covenant + docs | Authoritative text, but manual assembly | Assembled, cross-linked, with a response-time table |
+| Dependabot settings UI | One ecosystem at a time, no grouping | Grouped configs for npm/pip/go/cargo/docker; Actions on by default |
+
+## Verified, not just written
+
+- Tested on **Windows 11 + Git for Windows 2.45 + PowerShell 5.1**.
+- Every YAML file parses; CI re-checks it on every push.
+- Hook scripts are exercised in CI against valid and invalid commit messages,
+  a leaked AWS key, and a 2 MB staged file.
+- Confirmed that `sh` resolves inside git hooks on Windows (Git for Windows
+  provides `/usr/bin/sh`), so Lefthook's `run: sh .githooks/...` works even when
+  `sh` is not on your PowerShell `PATH`.
+- `templates/generic/` is generated from `recipes/` and CI fails on drift, so the
+  two never disagree.
+
+---
+
+## Repo layout
 
 ```
 .
@@ -19,182 +112,151 @@ need to make a decision.
 │   ├── 02-pr-template/
 │   │   └── .github/pull_request_template.md
 │   └── ...
-└── templates/
-    └── generic/             ← recipes 01–11 merged, ready to drop in whole
+├── templates/
+│   └── generic/             ← recipes 01–11 merged, ready to drop in whole
+├── scripts/
+│   └── build-templates.ps1  ← regenerates templates/generic (maintainers)
+└── .github/workflows/
+    └── verify.yml           ← this repo's CI (not copied to consumers)
 ```
 
-**The rule:** every recipe folder mirrors the layout of your *target repo*.
-So you copy the **contents** of a recipe into the **root** of your repo — not
-the recipe folder itself.
+## Recipes
 
-> Example: copy the contents of `recipes/01-issue-forms/` into `my-project/`,
-> and you get `my-project/.github/ISSUE_TEMPLATE/bug_report.yml`.
-
-## 60-second start
-
-**Option A — do everything at once**
-
-```powershell
-Copy-Item "templates\generic\*" -Destination "C:\path\to\my-repo" -Recurse -Force
-```
-
-**Option B — cherry-pick**
-
-```powershell
-# copy just the issue forms into an existing repo
-Copy-Item "recipes\01-issue-forms\*" -Destination "C:\path\to\my-repo" -Recurse -Force
-```
-
-**Option C — manual**
-
-Open the recipe folder in Explorer and drag its contents into your repo.
-
-**Then, in the target repo, spend 5 minutes here:**
-
-1. Replace `OWNER/REPO`, `@your-username`, `security@example.com`,
-   `conduct@example.com` — see the checklist at the bottom.
-2. Create the labels the templates reference (one-time, see the label table).
-3. If you took the hooks: `lefthook install`.
-
----
-
-## Recipe index
-
-| # | Recipe | Adds | Take it when |
-|---|---|---|---|
-| 01 | [`issue-forms`](recipes/01-issue-forms) | Bug + feature forms, no blank issues | Any public repo with issues |
-| 02 | [`pr-template`](recipes/02-pr-template) | PR description + checklist | Always — highest ROI file here |
-| 03 | [`community-health`](recipes/03-community-health) | SECURITY, CONTRIBUTING, CoC, SUPPORT, FUNDING | Any repo others touch |
-| 04 | [`codeowners`](recipes/04-codeowners) | Auto-assigned reviewers by path | Teams, or protecting critical files |
-| 05 | [`dependabot`](recipes/05-dependabot) | Automated dependency PRs | Always — ships with Actions updates enabled |
-| 06 | [`ci-basic`](recipes/06-ci-basic) | CI skeleton + repo hygiene job | Any repo that isn't CI'd yet |
-| 07 | [`security-scan`](recipes/07-security-scan) | CodeQL scanning | Public repos (free), or private with GHAS |
-| 08 | [`stale-and-labeler`](recipes/08-stale-and-labeler) | Stale bot, auto-labeling | Busy issue trackers |
-| 09 | [`release-notes`](recipes/09-release-notes) | Grouped changelog + tag→release | Anything you version |
-| 10 | [`githooks-lefthook`](recipes/10-githooks-lefthook) | Secret/large-file guards, commit-msg lint | Local safety net before CI |
-| 11 | [`root-files`](recipes/11-root-files) | `.editorconfig`, `.gitattributes`, `.gitignore` | Always — prevents CRLF hell |
-| 12 | [`reusable-workflows`](recipes/12-reusable-workflows) | One CI definition, many callers | 3+ repos with the same pipeline |
+| # | Recipe | Take it when |
+|---|---|---|
+| 01 | [`issue-forms`](recipes/01-issue-forms) | Any public repo with issues |
+| 02 | [`pr-template`](recipes/02-pr-template) | Always — highest ROI file here |
+| 03 | [`community-health`](recipes/03-community-health) | Any repo other people touch |
+| 04 | [`codeowners`](recipes/04-codeowners) | Teams, or protecting critical files |
+| 05 | [`dependabot`](recipes/05-dependabot) | Always — Actions updates enabled by default |
+| 06 | [`ci-basic`](recipes/06-ci-basic) | Any repo that isn't CI'd yet |
+| 07 | [`security-scan`](recipes/07-security-scan) | Public repos (free), or private with GHAS |
+| 08 | [`stale-and-labeler`](recipes/08-stale-and-labeler) | Busy issue trackers |
+| 09 | [`release-notes`](recipes/09-release-notes) | Anything you version |
+| 10 | [`githooks-lefthook`](recipes/10-githooks-lefthook) | Local safety net before CI |
+| 11 | [`root-files`](recipes/11-root-files) | Always — prevents CRLF and encoding diffs |
+| 12 | [`reusable-workflows`](recipes/12-reusable-workflows) | 3+ repos sharing one pipeline |
 
 ### If you only do five things
 
 1. `02-pr-template` — makes every future PR reviewable.
 2. `11-root-files` — kills line-ending and encoding diffs forever.
-3. `05-dependabot` — free security updates.
+3. `05-dependabot` — free dependency security updates.
 4. `06-ci-basic` — nothing merges untested.
-5. `10-githooks-lefthook` — stops secrets before they hit history.
+5. `10-githooks-lefthook` — stops secrets before they reach history.
 
 ---
 
-## Recipe notes
+<details>
+<summary><b>01 — Issue forms</b> · <code>.github/ISSUE_TEMPLATE/</code></summary>
 
-### 01 — Issue forms
-`.github/ISSUE_TEMPLATE/{bug_report.yml, feature_request.yml, config.yml}`
+- **Edit:** `OWNER/REPO` in `config.yml` (Discussions and private-advisory URLs).
+- **Gotcha:** labels in `labels: [...]` must already exist, or they're silently
+  skipped. Create them first.
+- **Gotcha:** each `body` entry needs a unique `id`.
+- `blank_issues_enabled: false` forces people through a form; set `true` to keep
+  free-form issues.
+- GitHub validates this YAML on push — a typo makes the template vanish from the
+  chooser. Verify at **Issues → New issue**.
+</details>
 
-- **Edit:** `OWNER/REPO` in `config.yml` (Discussions + private advisory URLs).
-- **Gotcha:** labels in `labels: [...]` must already exist in the repo, or they're
-  silently skipped. Create them first.
-- **Gotcha:** each `body` entry needs a unique `id`. Don't duplicate one.
-- `blank_issues_enabled: false` forces people through a form. If you want the
-  free-form option too, set it to `true`.
-- Preview with the **Issues → New issue** button after pushing to your default branch.
+<details>
+<summary><b>02 — PR template</b> · <code>.github/pull_request_template.md</code></summary>
 
-### 02 — PR template
-`.github/pull_request_template.md`
+- Applies to every new PR automatically. No configuration.
+- Keep it under ~40 lines or people delete it on sight.
+- Multiple templates: move to `.github/PULL_REQUEST_TEMPLATE/bugfix.md`, then
+  append `?template=bugfix.md` to the PR URL.
+</details>
 
-- Applies automatically to every new PR. No configuration needed.
-- It's markdown — edit freely. Keep it under ~40 lines or people delete it.
-- Want multiple templates? Rename the file to
-  `.github/PULL_REQUEST_TEMPLATE/bugfix.md` etc., then append
-  `?template=bugfix.md` to the PR URL.
-
-### 03 — Community health
-`.github/{SECURITY.md, CONTRIBUTING.md, CODE_OF_CONDUCT.md, SUPPORT.md, FUNDING.yml}`
+<details>
+<summary><b>03 — Community health</b> · <code>.github/SECURITY.md</code> etc.</summary>
 
 - **Edit:** `OWNER/REPO`, `security@example.com`, `conduct@example.com`.
-- GitHub surfaces these in the **Community Standards** tab and links them from
-  the new-issue chooser automatically.
-- `FUNDING.yml` only does something once GitHub Sponsors / a platform is set up.
+- GitHub surfaces these in **Community Standards** and links them from the
+  new-issue chooser automatically.
+- `FUNDING.yml` only does something once a sponsorship platform is set up.
   Delete it if you don't want a Sponsor button.
 - The CoC is a summary that links the authoritative Contributor Covenant 2.1.
+</details>
 
-### 04 — CODEOWNERS
-`.github/CODEOWNERS`
+<details>
+<summary><b>04 — CODEOWNERS</b> · <code>.github/CODEOWNERS</code></summary>
 
 - **Edit:** every `@your-username`.
-- Rules are matched **bottom-up**, last match wins. Put the catch-all `*` first.
-- Works for users *and* org teams (`@org/team`). Teams require org-owned repos.
-- For it to auto-request reviews, the repo must not have "require approvals"
-  conflicting settings; enforcement is strongest with branch protection on.
-- Verify it's valid: **Settings → Branches → Code owners** shows a warning if
-  a pattern is invalid.
+- Rules match **bottom-up**; the last match wins. Keep the catch-all `*` first.
+- Works with users and org teams (`@org/team`); teams require org-owned repos.
+- Invalid patterns show a warning under **Settings → Branches → Code owners**.
+</details>
 
-### 05 — Dependabot
-`.github/dependabot.yml`
+<details>
+<summary><b>05 — Dependabot</b> · <code>.github/dependabot.yml</code></summary>
 
-- Ships with **only** the `github-actions` ecosystem enabled — that's useful in
-  every repo. Uncomment your stack (`npm`, `pip`, `gomod`, `cargo`, `docker`).
-- `groups:` collapses updates into one PR per group instead of 20 noisy PRs.
-  This is the difference between Dependabot being useful and being muted.
-- Needs **Settings → Code security → Dependabot** enabled.
-- `directory` is where the manifest lives. For monorepos, add one entry per package.
+- Ships with **only** `github-actions` enabled — useful in every repo. Uncomment
+  your stack (`npm`, `pip`, `gomod`, `cargo`, `docker`).
+- `groups:` collapses updates into one PR per group instead of twenty noisy ones.
+  This is what separates "useful" from "muted".
+- Requires **Settings → Code security → Dependabot** to be enabled.
+- `directory` is the folder holding the manifest; monorepos need one entry each.
+</details>
 
-### 06 — CI skeleton
-`.github/workflows/ci.yml`
+<details>
+<summary><b>06 — CI skeleton</b> · <code>.github/workflows/ci.yml</code></summary>
 
-- Two jobs: `build` (with `TODO` steps for install/lint/test) and `hygiene`
-  (fails on committed conflict markers or CRLF files).
-- **Edit:** uncomment one runtime setup block, replace the three `run:` commands,
-  delete the rest.
+- Two jobs: `build` (with `TODO` steps) and `hygiene` (fails on committed
+  conflict markers or CRLF files).
+- **Edit:** uncomment one runtime setup, replace three `run:` commands, delete
+  the rest.
 - `concurrency` cancels superseded runs — free speed on busy branches.
-- `permissions: contents: read` is deliberate. Add scopes per job as needed.
+- `permissions: contents: read` is deliberate; add scopes per job.
 - The `hygiene` job is safe to delete if it annoys you.
+</details>
 
-### 07 — CodeQL
-`.github/workflows/codeql.yml`
+<details>
+<summary><b>07 — CodeQL</b> · <code>.github/workflows/codeql.yml</code></summary>
 
-- Enabled for the `actions` language by default (scans your workflows).
-  Uncomment `javascript-typescript`, `python`, `go`, etc.
+- Enabled for the `actions` language by default; uncomment your languages.
 - Free for public repos. Private repos need GitHub Advanced Security.
-- Runs on push, PR, and weekly. Weekly matters — it finds *new* query results in
-  *old* code.
-- Compiled languages need the autobuild step; interpreted ones skip it.
+- Weekly runs matter: they find *new* query results in *old* code.
+- Compiled languages use the autobuild step; interpreted ones skip it.
+</details>
 
-### 08 — Stale + labeler
-`.github/workflows/{stale.yml, labeler.yml}` + `.github/labeler.yml`
+<details>
+<summary><b>08 — Stale + labeler</b> · <code>.github/workflows/</code> + <code>.github/labeler.yml</code></summary>
 
 - **Edit:** create the `stale`, `documentation`, `ci`, `dependencies`, `tests`
-  labels, or change the names in the config.
-- Tune `days-before-*-stale` before turning it on. 60/14 is gentle.
-- `pull_request_target` is used here on purpose: fork PRs get a read-only token
-  under plain `pull_request`, so labeling silently fails. This workflow never
-  checks out PR code, so it's not the dangerous `pull_request_target` pattern.
+  labels, or rename them in the config.
+- Tune `days-before-*-stale` before enabling. 60/14 is gentle.
+- `pull_request_target` is used on purpose: fork PRs get a read-only token under
+  `pull_request`, so labeling silently fails. This workflow never checks out PR
+  code, so it avoids the dangerous `pull_request_target` pattern.
+</details>
 
-### 09 — Release notes + release workflow
-`.github/release.yml` + `.github/workflows/release.yml`
+<details>
+<summary><b>09 — Release notes</b> · <code>.github/release.yml</code> + workflow</summary>
 
-- `release.yml` (config) groups auto-generated notes by label. **Edit:** the
+- `release.yml` (config) groups auto-generated notes by label. **Edit** the
   category labels to match what you actually use.
-- `workflows/release.yml` fires on `v*.*.*` tags, builds, and creates a GitHub
-  Release with generated notes via `gh`.
-- `--generate-notes` uses PR titles/labels between the previous tag and this one,
-  so it's only as good as your PR hygiene.
-- Publishing to npm/PyPI is commented out — keep it in a separate job so a failed
+- The workflow fires on `v*.*.*` tags, builds, and creates a Release via `gh`.
+- `--generate-notes` reads PR titles and labels between tags, so it's only as good
+  as your PR hygiene.
+- Registry publishing is commented out and kept in a separate job, so a failed
   publish never blocks the release.
+</details>
 
-### 10 — Git hooks (Lefthook)
-`lefthook.yml` + `.githooks/{check-secrets.sh, check-large-files.sh, commit-msg.sh}`
+<details>
+<summary><b>10 — Git hooks</b> · <code>lefthook.yml</code> + <code>.githooks/</code></summary>
 
 Blocks, before the commit exists:
 
-- **secrets** — AWS keys, GitHub tokens, Google API keys, Slack tokens, OpenAI
-  keys, private-key headers
-- **large files** — anything over 1 MiB (override with `LIMIT_BYTES=...`)
-- **commit messages** — Conventional Commits, with merge/revert/fixup exempt
-
-Setup (one time per clone):
+- **Secrets** — via [gitleaks](https://github.com/gitleaks/gitleaks), the standard
+  scanner. If it isn't installed the hook warns and skips rather than blocking
+  your work; a dependency-free fallback ships in `.githooks/check-secrets.sh`.
+- **Large files** — anything over 1 MiB (override with `LIMIT_BYTES=...`).
+- **Commit messages** — Conventional Commits; merge/revert/fixup exempt.
 
 ```powershell
-winget install evilmartians.lefthook     # or: scoop install lefthook
+winget install evilmartians.lefthook     # or scoop / brew / npm i -D lefthook
 lefthook install
 lefthook run pre-commit                  # test it
 ```
@@ -207,66 +269,55 @@ LEFTHOOK=0 git commit -m "wip"  # skip lefthook specifically
 ```
 
 Why Lefthook instead of a `.git/hooks` folder: `.git/hooks` is **not committed**,
-so it never reaches your teammates, and raw shell hooks break on Windows. With
-Lefthook you commit a YAML file, everyone runs `lefthook install`, and the same
-hooks work on Windows/macOS/Linux.
+so it never reaches teammates, and raw shell hooks break on Windows. Here you
+commit a YAML file, everyone runs `lefthook install`, and the same hooks work
+everywhere.
 
-**Windows note:** the hooks call `sh`. That's fine — Git for Windows provides
-one and puts it on `PATH` while running hooks, even if `sh` isn't on your
-PowerShell PATH. Verified: `sh` resolves to `/usr/bin/sh` inside a hook.
-
-**Where to add linters:** `lefthook.yml` has commented `format`/`lint` blocks.
 Keep `pre-commit` fast (formatters, secret scan). Put tests in `pre-push`.
+</details>
 
-### 11 — Root files
-`.editorconfig`, `.gitattributes`, `.gitignore`
+<details>
+<summary><b>11 — Root files</b> · <code>.editorconfig</code>, <code>.gitattributes</code>, <code>.gitignore</code></summary>
 
 - `.gitattributes` forces `LF` in the repo, keeps `.bat/.cmd/.ps1` as CRLF, and
-  marks lockfiles as generated so they don't wreck diffs. This is the single
+  marks lockfiles as generated so they stop wrecking diffs. This is the single
   best fix for "why does every file look changed on Windows?".
 - `.gitignore` has a safe base plus commented per-language sections.
-- `.editorconfig` is respected by VS Code, JetBrains, and most editors natively.
+- `.editorconfig` is respected natively by VS Code, JetBrains, and most editors.
+</details>
 
-### 12 — Reusable workflows
-`.github/workflows/{reusable-ci.yml, ci-caller.yml}`
+<details>
+<summary><b>12 — Reusable workflows</b> · <code>workflow_call</code></summary>
 
-- **This is an alternative to recipe 06**, not an addition — don't copy both or
-  you'll run two identical `CI` workflows.
-- `workflow_call` lets one file define the pipeline. Callers pass inputs.
-- Across repos, the reusable workflow's repo must be public (or same org with
-  access). Pin `@main` to a tag/SHA, never `@main` in production.
-- Called workflows can't exceed the caller's `permissions`.
+- **This is an alternative to recipe 06, not an addition.** Copying both runs two
+  identical `CI` workflows.
+- `workflow_call` defines the pipeline once; callers pass inputs.
+- Across repos, the workflow's repo must be public (or same org with access).
+  Pin `@main` to a tag or SHA.
+- A called workflow cannot exceed the caller's `permissions`.
+</details>
 
 ---
 
 ## Labels to create once
 
-Create these under **Issues → Labels** before or right after copying:
+Create these under **Issues → Labels**:
 
 | Label | Used by |
 |---|---|
-| `bug` | issue forms, release notes |
-| `enhancement` | issue forms, release notes |
-| `needs-triage` | issue forms |
+| `bug`, `enhancement`, `needs-triage` | issue forms |
 | `stale` | stale bot |
-| `documentation` | labeler, release notes |
-| `ci` | labeler, release notes |
-| `dependencies` | labeler, release notes |
-| `tests` | labeler |
-| `breaking`, `breaking-change` | release notes |
-| `feature`, `fix`, `performance` | release notes |
+| `documentation`, `ci`, `dependencies`, `tests` | labeler |
+| `breaking`, `breaking-change`, `feature`, `fix`, `performance` | release notes |
 | `chore`, `refactor`, `build`, `test` | release notes |
 | `skip-changelog` | release notes (excluded) |
 | `pinned`, `security` | stale bot (exempt) |
 
-Tip: `gh label create "needs-triage" --color "fbca04"` or bulk-create them
-once from the GitHub UI.
+```bash
+gh label create "needs-triage" --color "fbca04"
+```
 
----
-
-## Placeholder checklist
-
-Search-replace these after copying:
+## Placeholders
 
 | Placeholder | Appears in |
 |---|---|
@@ -275,36 +326,71 @@ Search-replace these after copying:
 | `security@example.com` | `SECURITY.md` |
 | `conduct@example.com` | `CODE_OF_CONDUCT.md` |
 | `your-username` | `FUNDING.yml` |
-| `TODO:` | every workflow — these are deliberate |
+| `TODO:` | every workflow — deliberate |
 
 ---
 
 ## Gotchas worth knowing
 
-- **Never commit `.git/hooks/`.** It's local-only and untracked by design.
-- **`--no-verify` skips hooks.** Hooks are a convenience, not a security boundary.
-  Real enforcement belongs in CI and branch protection.
-- **Hooks run on the client.** A malicious contributor's clone can bypass them.
-  Server-side checks (CI, required reviews) are the enforcement layer.
-- **`pull_request_target` + checkout of PR code = RCE.** Only use it for
+- **Never commit `.git/hooks/`.** It's local-only by design.
+- **`--no-verify` skips hooks.** Hooks are convenience, not a security boundary.
+  Enforcement belongs in CI and branch protection.
+- **Hooks run client-side.** A determined contributor bypasses them. Server-side
+  checks are the real gate.
+- **`pull_request_target` + checking out PR code = RCE.** Only use it for
   metadata-only actions, as the labeler recipe does.
-- **Workflow permissions default to read-only** in newer repos. If a step fails
-  with 403, add the specific scope to `permissions:`, not `write-all`.
-- **`paths`/`branches` filters** on `push` can silently skip your required check.
-  If a job is required in branch protection, make sure it always runs or use a
-  separate always-running workflow.
-- **Cron schedules are UTC** and often delayed under load. Don't depend on
-  minute precision.
-- **Issue form YAML is validated on push.** A typo makes the template vanish from
-  the chooser. Check **Issues → New issue** after changing it.
+- **New repos default to read-only workflow tokens.** A 403 means add the
+  specific scope to `permissions:`, not `write-all`.
+- **`paths`/`branches` filters** can silently skip a required check. If a job is
+  required in branch protection, make sure it always runs.
+- **Cron is UTC** and often delayed under load. Don't rely on minute precision.
 
-## Optional next steps
+## What this deliberately does not replace
 
-- Turn this folder into a **GitHub template repository** (Settings → Template
-  repository) so new repos get a "Use this template" button. `gh repo create
-  my-new --template you/this-repo`.
-- Want org-wide defaults? Name a repo `.github` and put these files in it —
-  GitHub uses them as the fallback for every repo in the org. Add
-  `profile/README.md` for the org landing page.
-- Add `actionlint` to CI to validate workflows themselves:
-  `docker run --rm -v "$PWD:/repo" rhysd/actionlint:latest -color`.
+Branch protection rules, required reviews, environment secrets, signed commits,
+and org-level policy. Those are settings and process, not files. This kit gets a
+repo to "well-kept"; it can't get it to "governed".
+
+---
+
+## Using it as a GitHub template
+
+To give others a one-click **"Use this template"** button:
+
+```bash
+gh api -X PATCH repos/OWNER/REPO -f is_template=true
+gh repo create my-new-project --template OWNER/REPO
+```
+
+For **org-wide defaults**, name a repo `.github` and push these files there —
+GitHub falls back to it for every repo in the org. Add `profile/README.md` for
+the org landing page.
+
+## Maintaining this kit
+
+`recipes/` is the source of truth. `templates/generic/` is generated:
+
+```powershell
+# Windows: pass -ExecutionPolicy Bypass, or scripts may be disabled on your box.
+powershell -NoProfile -ExecutionPolicy Bypass -File ./scripts/build-templates.ps1
+powershell -NoProfile -ExecutionPolicy Bypass -File ./scripts/build-templates.ps1 -Check
+```
+
+```bash
+# macOS / Linux (PowerShell 6+)
+pwsh -NoProfile -File ./scripts/build-templates.ps1 -Check
+```
+
+Rules:
+
+- One concern per recipe folder; the folder mirrors the target repo layout.
+- No two recipes may provide the same path — the build script fails loudly.
+- `12-reusable-workflows` is excluded from the merge because it replaces `06`.
+- `templates/generic/` is never edited by hand.
+
+## License
+
+[MIT](LICENSE). The config files are meant to be copied; keep the notice in
+place and you're done.
+
+If this saved you an hour, a ⭐ helps other people find it.

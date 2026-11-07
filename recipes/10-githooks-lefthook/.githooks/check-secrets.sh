@@ -1,5 +1,9 @@
 #!/bin/sh
-# Block commits that look like they contain credentials.
+# DEPENDENCY-FREE FALLBACK secret scanner.
+#
+# Prefer gitleaks (used by lefthook.yml by default). Use this script only when
+# the gitleaks binary cannot be installed. It matches a handful of well-known
+# token formats — it is NOT a replacement for a real scanner.
 #
 # Usage: sh .githooks/check-secrets.sh [files...]
 # With no arguments it falls back to the staged files.

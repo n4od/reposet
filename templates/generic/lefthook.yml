@@ -22,9 +22,27 @@
 pre-commit:
   parallel: true
   commands:
+    # Secret scanning via gitleaks — the industry-standard scanner.
+    # Install: winget install gitleaks | brew install gitleaks
+    #          | go install github.com/gitleaks/gitleaks/v8@latest
+    # Requires v8.19+ (older builds: gitleaks protect --staged --redact)
     secrets:
       glob: "*"
-      run: sh .githooks/check-secrets.sh {staged_files}
+      run: |
+        if ! command -v gitleaks >/dev/null 2>&1; then
+          echo "! gitleaks not found — secret scan skipped for this commit."
+          echo "  Install it: winget install gitleaks   (or see README)"
+          exit 0
+        fi
+        gitleaks git --pre-commit --staged --redact --no-banner -v
+      fail_text: "Secret detected. Remove it, or skip this commit with: LEFTHOOK=0 git commit ..."
+
+    # No gitleaks allowed on your machine (locked-down CI, offline box)?
+    # Comment out the block above and use this dependency-free fallback instead.
+    # It only matches a handful of well-known token formats.
+    # secrets-fallback:
+    #   glob: "*"
+    #   run: sh .githooks/check-secrets.sh {staged_files}
 
     large-files:
       run: sh .githooks/check-large-files.sh
