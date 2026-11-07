@@ -4,6 +4,8 @@
 > CI, Dependabot, CodeQL, release notes, code owners, and git hooks that actually
 > work on Windows.
 
+[![npm version](https://img.shields.io/npm/v/reposet.svg)](https://www.npmjs.com/package/reposet)
+[![npm downloads](https://img.shields.io/npm/dm/reposet.svg)](https://www.npmjs.com/package/reposet)
 [![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 ![Runtime dependencies: none](https://img.shields.io/badge/runtime%20deps-none-brightgreen)
 ![Platform](https://img.shields.io/badge/platform-Windows%20%7C%20macOS%20%7C%20Linux-lightgrey)
@@ -382,6 +384,8 @@ gh label create "needs-triage" --color "fbca04"
 - **`paths`/`branches` filters** can silently skip a required check. If a job is
   required in branch protection, make sure it always runs.
 - **Cron is UTC** and often delayed under load. Don't rely on minute precision.
+- **Stuck?** [docs/troubleshooting.md](docs/troubleshooting.md) covers hooks that
+  don't fire, `sh` on Windows, CodeQL on private repos, exit codes, and more.
 
 ## What this deliberately does not replace
 
@@ -425,6 +429,13 @@ Rules:
 - No two recipes may provide the same path — the build script fails loudly.
 - `12-reusable-workflows` is excluded from the merge because it replaces `06`.
 - `templates/generic/` is never edited by hand.
+
+Further reading:
+
+- [CONTRIBUTING.md](CONTRIBUTING.md) — the ground rules, local setup, and how to add a recipe.
+- [docs/releasing.md](docs/releasing.md) — versioning and the publish checklist.
+- [docs/troubleshooting.md](docs/troubleshooting.md) — fixes for common problems.
+- [SECURITY.md](SECURITY.md) — how to report a vulnerability.
 
 ### Publishing the CLI
 

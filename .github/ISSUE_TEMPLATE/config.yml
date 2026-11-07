@@ -1,0 +1,11 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Documentation
+    url: https://github.com/n4od/reposet#readme
+    about: Setup, the recipe list, labels to create, and placeholders to replace.
+  - name: Troubleshooting
+    url: https://github.com/n4od/reposet/blob/master/docs/troubleshooting.md
+    about: Hooks not running, Windows quirks, CodeQL on private repos, and more.
+  - name: npm package
+    url: https://www.npmjs.com/package/reposet
+    about: Published versions and install instructions.

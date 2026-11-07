@@ -1,0 +1,62 @@
+name: ✨ Feature request
+description: Suggest a new recipe, flag, or improvement
+title: "[Feature]: "
+labels: ["enhancement"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for the idea. The best feature requests describe the problem first,
+        then the proposal.
+
+        Thinking about a new recipe? Read [CONTRIBUTING.md](https://github.com/n4od/reposet/blob/master/CONTRIBUTING.md)
+        first — the ground rules explain what fits the kit.
+
+  - type: checkboxes
+    id: preflight
+    attributes:
+      label: Preflight checklist
+      options:
+        - label: I have searched the existing issues and this is not a duplicate
+          required: true
+        - label: This fits the kit's scope (GitHub repo hygiene, language-agnostic)
+          required: true
+
+  - type: textarea
+    id: problem
+    attributes:
+      label: What problem does this solve?
+      description: Describe the situation where you wished this existed.
+    validations:
+      required: true
+
+  - type: textarea
+    id: solution
+    attributes:
+      label: Proposed solution
+      description: What should reposet do? A new recipe, a CLI flag, a change to an existing file?
+    validations:
+      required: true
+
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternatives considered
+      description: What do you do today? Are there other tools that solve part of this?
+    validations:
+      required: false
+
+  - type: checkboxes
+    id: contribute
+    attributes:
+      label: Would you like to work on this?
+      options:
+        - label: I'd be willing to open a pull request
+
+  - type: checkboxes
+    id: terms
+    attributes:
+      label: Code of Conduct
+      options:
+        - label: I agree to follow this project's Code of Conduct
+          required: true
