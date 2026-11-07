@@ -445,6 +445,6 @@ place and you're done.
 
 ---
 
-Built by **N4OD** · [github.com/n4od](https://github.com/n4od) · [yegnadevelopers.com](https://yegnadevelopers.com/)
+Built by **N4OD** · [github.com/n4od](https://github.com/n4od)
 
 If this saved you an hour, a ⭐ helps other people find it.
