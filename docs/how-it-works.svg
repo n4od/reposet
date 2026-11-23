@@ -1,0 +1,231 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="900" viewBox="0 0 1600 900"
+     role="img" aria-label="How reposet works - pick recipes, fill the blanks, write files, check">
+  <!-- Feature explainer for reposet, 1600x900. Source of truth; render the PNG from this.
+       Render: python render.py docs/how-it-works.svg -s 2 -o <absolute path>.png -->
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#0B0C0E"/>
+      <stop offset="1" stop-color="#0E1117"/>
+    </linearGradient>
+    <radialGradient id="glowGreen">
+      <stop offset="0" stop-color="#34D399" stop-opacity="0.16"/>
+      <stop offset="1" stop-color="#34D399" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="glowBlue">
+      <stop offset="0" stop-color="#5B8CFF" stop-opacity="0.14"/>
+      <stop offset="1" stop-color="#5B8CFF" stop-opacity="0"/>
+    </radialGradient>
+    <pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse">
+      <path d="M40 0 H0 V40" fill="none" stroke="#151820" stroke-width="1"/>
+    </pattern>
+    <marker id="arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M0 1 L9 5 L0 9 z" fill="#5A6474"/>
+    </marker>
+  </defs>
+
+  <!-- background -->
+  <rect width="1600" height="900" fill="url(#bg)"/>
+  <rect width="1600" height="900" fill="url(#grid)" opacity="0.55"/>
+  <ellipse cx="300" cy="200" rx="480" ry="300" fill="url(#glowGreen)"/>
+  <ellipse cx="1320" cy="720" rx="500" ry="320" fill="url(#glowBlue)"/>
+
+  <!-- heading -->
+  <text x="80" y="122" fill="#F5F7FA"
+        font-family="ui-sans-serif, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif"
+        font-size="44" font-weight="700" letter-spacing="-1">How it works</text>
+  <text x="80" y="162" fill="#8A94A6"
+        font-family="ui-sans-serif, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif"
+        font-size="20"><tspan font-family="ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, 'Liberation Mono', monospace" fill="#E8ECF2">npx reposet init</tspan> — four steps, and nothing of yours gets overwritten.</text>
+
+  <!-- ───────────── step 1: pick ───────────── -->
+  <rect x="80" y="250" width="324" height="400" rx="16" fill="#12141A" stroke="#262A33" stroke-width="1.5"/>
+  <circle cx="122" cy="292" r="18" fill="#34D399" fill-opacity="0.14"/>
+  <text x="122" y="298" fill="#34D399"
+        font-family="ui-sans-serif, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif"
+        font-size="16" font-weight="700" text-anchor="middle">1</text>
+
+  <rect x="104" y="322" width="276" height="190" rx="12" fill="#171A21" stroke="#262A33"/>
+  <text x="120" y="352" fill="#5F697A"
+        font-family="ui-sans-serif, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif"
+        font-size="11" letter-spacing="0.4">11 recipes · all on by default</text>
+
+  <rect x="120" y="372" width="18" height="18" rx="6" fill="#34D399" fill-opacity="0.16" stroke="#34D399"/>
+  <path d="M125 381 L128 384 L133 376" fill="none" stroke="#34D399" stroke-width="2"
+        stroke-linecap="round" stroke-linejoin="round"/>
+  <text x="150" y="385" fill="#E8ECF2"
+        font-family="ui-sans-serif, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif"
+        font-size="13">issue-forms</text>
+
+  <rect x="120" y="406" width="18" height="18" rx="6" fill="#34D399" fill-opacity="0.16" stroke="#34D399"/>
+  <path d="M125 415 L128 418 L133 410" fill="none" stroke="#34D399" stroke-width="2"
+        stroke-linecap="round" stroke-linejoin="round"/>
+  <text x="150" y="419" fill="#E8ECF2"
+        font-family="ui-sans-serif, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif"
+        font-size="13">pr-template</text>
+
+  <rect x="120" y="440" width="18" height="18" rx="6" fill="#34D399" fill-opacity="0.16" stroke="#34D399"/>
+  <path d="M125 449 L128 452 L133 444" fill="none" stroke="#34D399" stroke-width="2"
+        stroke-linecap="round" stroke-linejoin="round"/>
+  <text x="150" y="453" fill="#E8ECF2"
+        font-family="ui-sans-serif, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif"
+        font-size="13">dependabot</text>
+
+  <rect x="120" y="474" width="18" height="18" rx="6" fill="#1C2029" stroke="#262A33"/>
+  <text x="150" y="487" fill="#6B7484"
+        font-family="ui-sans-serif, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif"
+        font-size="13">codeql</text>
+
+  <text x="104" y="572" fill="#E8ECF2"
+        font-family="ui-sans-serif, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif"
+        font-size="26" font-weight="600">Pick recipes</text>
+  <text x="104" y="606" fill="#8A94A6"
+        font-family="ui-sans-serif, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif"
+        font-size="16">All 11 by default</text>
+
+  <line x1="410" y1="417" x2="444" y2="417" stroke="#5A6474" stroke-width="2" marker-end="url(#arrow)"/>
+
+  <!-- ───────────── step 2: fill the blanks ───────────── -->
+  <rect x="452" y="250" width="324" height="400" rx="16" fill="#12141A" stroke="#262A33" stroke-width="1.5"/>
+  <circle cx="494" cy="292" r="18" fill="#34D399" fill-opacity="0.14"/>
+  <text x="494" y="298" fill="#34D399"
+        font-family="ui-sans-serif, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif"
+        font-size="16" font-weight="700" text-anchor="middle">2</text>
+
+  <rect x="476" y="322" width="276" height="190" rx="12" fill="#171A21" stroke="#262A33"/>
+  <text x="492" y="352" fill="#5F697A"
+        font-family="ui-sans-serif, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif"
+        font-size="11" letter-spacing="0.4">detected from git</text>
+
+  <line x1="492" y1="366" x2="736" y2="366" stroke="#22262F" stroke-width="1"/>
+
+  <text x="492" y="390" fill="#6B7484"
+        font-family="ui-sans-serif, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif"
+        font-size="11">owner</text>
+  <text x="736" y="390" fill="#E8ECF2" text-anchor="end"
+        font-family="ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, 'Liberation Mono', monospace"
+        font-size="12">acme</text>
+
+  <line x1="492" y1="404" x2="736" y2="404" stroke="#22262F" stroke-width="1"/>
+
+  <text x="492" y="428" fill="#6B7484"
+        font-family="ui-sans-serif, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif"
+        font-size="11">repo</text>
+  <text x="736" y="428" fill="#E8ECF2" text-anchor="end"
+        font-family="ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, 'Liberation Mono', monospace"
+        font-size="12">widget</text>
+
+  <line x1="492" y1="442" x2="736" y2="442" stroke="#22262F" stroke-width="1"/>
+
+  <text x="492" y="466" fill="#6B7484"
+        font-family="ui-sans-serif, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif"
+        font-size="11">email</text>
+  <text x="736" y="466" fill="#E8ECF2" text-anchor="end"
+        font-family="ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, 'Liberation Mono', monospace"
+        font-size="12">alice@acme.dev</text>
+
+  <text x="492" y="494" fill="#5F697A"
+        font-family="ui-sans-serif, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif"
+        font-size="11">overridable with <tspan font-family="ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, 'Liberation Mono', monospace">--owner --repo --email</tspan></text>
+
+  <text x="476" y="572" fill="#E8ECF2"
+        font-family="ui-sans-serif, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif"
+        font-size="26" font-weight="600">Fill the blanks</text>
+  <text x="476" y="606" fill="#8A94A6"
+        font-family="ui-sans-serif, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif"
+        font-size="16">Owner, repo, email — from git</text>
+
+  <line x1="782" y1="417" x2="816" y2="417" stroke="#5A6474" stroke-width="2" marker-end="url(#arrow)"/>
+
+  <!-- ───────────── step 3: write ───────────── -->
+  <rect x="824" y="250" width="324" height="400" rx="16" fill="#12141A" stroke="#262A33" stroke-width="1.5"/>
+  <circle cx="866" cy="292" r="18" fill="#34D399" fill-opacity="0.14"/>
+  <text x="866" y="298" fill="#34D399"
+        font-family="ui-sans-serif, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif"
+        font-size="16" font-weight="700" text-anchor="middle">3</text>
+
+  <rect x="848" y="322" width="276" height="190" rx="12" fill="#171A21" stroke="#262A33"/>
+
+  <text x="864" y="404" fill="#F5F7FA"
+        font-family="ui-sans-serif, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif"
+        font-size="44" font-weight="700" letter-spacing="-1.5">25</text>
+  <text x="864" y="428" fill="#8A94A6"
+        font-family="ui-sans-serif, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif"
+        font-size="13">files written</text>
+
+  <line x1="864" y1="446" x2="1108" y2="446" stroke="#22262F" stroke-width="1"/>
+
+  <circle cx="868" cy="468" r="3" fill="#F5B942"/>
+  <text x="882" y="472" fill="#F5B942"
+        font-family="ui-sans-serif, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif"
+        font-size="11">2 skipped (exists)</text>
+
+  <circle cx="868" cy="492" r="3" fill="#3A4150"/>
+  <text x="882" y="496" fill="#8A94A6"
+        font-family="ui-sans-serif, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif"
+        font-size="11">0 overwritten · --force to replace</text>
+
+  <text x="848" y="572" fill="#E8ECF2"
+        font-family="ui-sans-serif, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif"
+        font-size="26" font-weight="600">Write</text>
+  <text x="848" y="606" fill="#8A94A6"
+        font-family="ui-sans-serif, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif"
+        font-size="16">Never overwrites your files</text>
+
+  <line x1="1154" y1="417" x2="1188" y2="417" stroke="#5A6474" stroke-width="2" marker-end="url(#arrow)"/>
+
+  <!-- ───────────── step 4: check ───────────── -->
+  <rect x="1196" y="250" width="324" height="400" rx="16" fill="#12141A" stroke="#262A33" stroke-width="1.5"/>
+  <circle cx="1238" cy="292" r="18" fill="#34D399" fill-opacity="0.14"/>
+  <text x="1238" y="298" fill="#34D399"
+        font-family="ui-sans-serif, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif"
+        font-size="16" font-weight="700" text-anchor="middle">4</text>
+
+  <rect x="1220" y="322" width="276" height="190" rx="12" fill="#171A21" stroke="#262A33"/>
+
+  <text x="1236" y="380" fill="#5F697A"
+        font-family="ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, 'Liberation Mono', monospace"
+        font-size="12">$</text>
+  <text x="1252" y="380" fill="#E8ECF2"
+        font-family="ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, 'Liberation Mono', monospace"
+        font-size="12">npx reposet check .</text>
+
+  <circle cx="1247" cy="414" r="11" fill="#34D399" fill-opacity="0.14"/>
+  <path d="M1241 414 L1246 419 L1254 408" fill="none" stroke="#34D399" stroke-width="2.2"
+        stroke-linecap="round" stroke-linejoin="round"/>
+  <text x="1266" y="419" fill="#34D399"
+        font-family="ui-sans-serif, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif"
+        font-size="13" font-weight="700">OK</text>
+  <text x="1294" y="419" fill="#8A94A6"
+        font-family="ui-sans-serif, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif"
+        font-size="11">no placeholders left</text>
+
+  <line x1="1236" y1="442" x2="1480" y2="442" stroke="#22262F" stroke-width="1"/>
+
+  <text x="1236" y="470" fill="#34D399"
+        font-family="ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, 'Liberation Mono', monospace"
+        font-size="11">exit 0</text>
+  <text x="1288" y="470" fill="#6B7484"
+        font-family="ui-sans-serif, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif"
+        font-size="11">clean, safe to gate CI on</text>
+
+  <text x="1236" y="494" fill="#8A94A6"
+        font-family="ui-sans-serif, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif"
+        font-size="11">exits 1 when one remains</text>
+
+  <text x="1220" y="572" fill="#E8ECF2"
+        font-family="ui-sans-serif, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif"
+        font-size="26" font-weight="600">Check</text>
+  <text x="1220" y="606" fill="#8A94A6"
+        font-family="ui-sans-serif, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif"
+        font-size="16">Exits 1 until it's clean</text>
+
+  <!-- footer -->
+  <line x1="80" y1="730" x2="1520" y2="730" stroke="#1A1E26" stroke-width="1"/>
+  <circle cx="85" cy="794" r="5" fill="#34D399"/>
+  <text x="104" y="800" fill="#6B7484"
+        font-family="ui-sans-serif, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif"
+        font-size="18" letter-spacing="0.3">Files you own outright — no lock-in, no dependencies, no lockfile.</text>
+  <text x="1520" y="800" fill="#5F697A" text-anchor="end"
+        font-family="ui-sans-serif, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif"
+        font-size="18">github.com/n4od/reposet</text>
+</svg>

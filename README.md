@@ -1,3 +1,7 @@
+<p align="center">
+  <img src="docs/banner.png" alt="reposet — every new repo, set up in one command">
+</p>
+
 # reposet
 
 > Sets up the boring but important files every new GitHub repo needs.
@@ -124,6 +128,20 @@ cp -r templates/generic/. /path/to/my-repo/
 
 No package to install, no config to generate, no lock-in — it's files you own
 outright.
+
+## How it works
+
+<p align="center">
+  <img src="docs/how-it-works.png" alt="reposet in four steps: pick recipes, fill the blanks, write the files, then check">
+</p>
+
+1. **Pick** — all 11 recipes, or just the ones you want with `--only`.
+2. **Fill** — `OWNER/REPO`, `@your-username` and the contact emails are read
+   from the target's git remote and `git config`; every flag can override them.
+3. **Write** — creates what is missing and skips what already exists. Nothing is
+   ever deleted; `--force` is the only way to replace a file.
+4. **Check** — `reposet check .` exits `1` while a required placeholder remains,
+   which is what makes it usable as a CI gate.
 
 ## Why not just use the defaults?
 

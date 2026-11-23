@@ -1,0 +1,133 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="400" viewBox="0 0 1280 400"
+     role="img" aria-label="reposet - every new repo, set up in one command">
+  <!-- README hero banner for reposet. Source of truth; render the PNG from this.
+       Render: python render.py docs/banner.svg -s 2 -->
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#0B0C0E"/>
+      <stop offset="1" stop-color="#0E1117"/>
+    </linearGradient>
+    <radialGradient id="glowGreen" cx="0.5" cy="0.5" r="0.5">
+      <stop offset="0" stop-color="#34D399" stop-opacity="0.18"/>
+      <stop offset="1" stop-color="#34D399" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="glowBlue" cx="0.5" cy="0.5" r="0.5">
+      <stop offset="0" stop-color="#5B8CFF" stop-opacity="0.16"/>
+      <stop offset="1" stop-color="#5B8CFF" stop-opacity="0"/>
+    </radialGradient>
+    <pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse">
+      <path d="M40 0 H0 V40" fill="none" stroke="#151820" stroke-width="1"/>
+    </pattern>
+    <filter id="shadow" x="-30%" y="-30%" width="160%" height="160%">
+      <feDropShadow dx="0" dy="18" stdDeviation="24" flood-color="#000000" flood-opacity="0.55"/>
+    </filter>
+  </defs>
+
+  <!-- background -->
+  <rect width="1280" height="400" fill="url(#bg)"/>
+  <rect width="1280" height="400" fill="url(#grid)" opacity="0.55"/>
+  <ellipse cx="300" cy="200" rx="380" ry="230" fill="url(#glowGreen)"/>
+  <ellipse cx="980" cy="150" rx="420" ry="260" fill="url(#glowBlue)"/>
+
+  <!-- left: identity -->
+  <text x="64" y="152" fill="#F5F7FA"
+        font-family="ui-sans-serif, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif"
+        font-size="84" font-weight="700" letter-spacing="-2">reposet</text>
+
+  <text x="67" y="198" fill="#9AA4B6"
+        font-family="ui-sans-serif, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif"
+        font-size="22">Every new repo, set up in one command.</text>
+
+  <text x="67" y="240" fill="#5F697A"
+        font-family="ui-sans-serif, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif"
+        font-size="14" letter-spacing="0.4">Issue forms · PR template · CI · CodeQL · git hooks</text>
+
+  <!-- left: proof pills -->
+  <rect x="64" y="272" width="92" height="26" rx="13" fill="#34D399" fill-opacity="0.14"/>
+  <text x="110" y="289" fill="#34D399"
+        font-family="ui-sans-serif, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif"
+        font-size="10" font-weight="700" letter-spacing="0.6" text-anchor="middle">11 RECIPES</text>
+
+  <rect x="166" y="272" width="118" height="26" rx="13" fill="#5B8CFF" fill-opacity="0.14"/>
+  <text x="225" y="289" fill="#7DA3FF"
+        font-family="ui-sans-serif, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif"
+        font-size="10" font-weight="700" letter-spacing="0.6" text-anchor="middle">0 DEPENDENCIES</text>
+
+  <!-- right: terminal panel -->
+  <rect x="584" y="44" width="640" height="312" rx="16" fill="#12141A" stroke="#262A33"
+        stroke-width="1.5" filter="url(#shadow)"/>
+
+  <circle cx="608" cy="70" r="5" fill="#F05252" opacity="0.7"/>
+  <circle cx="624" cy="70" r="5" fill="#F5B942" opacity="0.7"/>
+  <circle cx="640" cy="70" r="5" fill="#34D399" opacity="0.7"/>
+  <text x="660" y="75" fill="#6B7484"
+        font-family="ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, 'Liberation Mono', monospace"
+        font-size="12">~/new-project — zsh</text>
+
+  <line x1="600" y1="94" x2="1208" y2="94" stroke="#22262F" stroke-width="1"/>
+
+  <!-- command -->
+  <text x="608" y="124" fill="#5F697A"
+        font-family="ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, 'Liberation Mono', monospace"
+        font-size="13">$</text>
+  <text x="626" y="124" fill="#F5F7FA"
+        font-family="ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, 'Liberation Mono', monospace"
+        font-size="13">npx reposet init</text>
+
+  <!-- files written, excerpt -->
+  <text x="608" y="150" fill="#34D399"
+        font-family="ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, 'Liberation Mono', monospace"
+        font-size="13">+</text>
+  <text x="626" y="150" fill="#C3CBD9"
+        font-family="ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, 'Liberation Mono', monospace"
+        font-size="13">.github/ISSUE_TEMPLATE/bug_report.yml</text>
+
+  <text x="608" y="172" fill="#34D399"
+        font-family="ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, 'Liberation Mono', monospace"
+        font-size="13">+</text>
+  <text x="626" y="172" fill="#C3CBD9"
+        font-family="ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, 'Liberation Mono', monospace"
+        font-size="13">.github/pull_request_template.md</text>
+
+  <text x="608" y="194" fill="#34D399"
+        font-family="ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, 'Liberation Mono', monospace"
+        font-size="13">+</text>
+  <text x="626" y="194" fill="#C3CBD9"
+        font-family="ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, 'Liberation Mono', monospace"
+        font-size="13">.github/workflows/ci.yml</text>
+
+  <text x="608" y="216" fill="#34D399"
+        font-family="ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, 'Liberation Mono', monospace"
+        font-size="13">+</text>
+  <text x="626" y="216" fill="#C3CBD9"
+        font-family="ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, 'Liberation Mono', monospace"
+        font-size="13">.github/dependabot.yml</text>
+
+  <text x="608" y="238" fill="#34D399"
+        font-family="ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, 'Liberation Mono', monospace"
+        font-size="13">+</text>
+  <text x="626" y="238" fill="#C3CBD9"
+        font-family="ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, 'Liberation Mono', monospace"
+        font-size="13">.github/CODEOWNERS</text>
+
+  <text x="608" y="260" fill="#34D399"
+        font-family="ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, 'Liberation Mono', monospace"
+        font-size="13">+</text>
+  <text x="626" y="260" fill="#C3CBD9"
+        font-family="ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, 'Liberation Mono', monospace"
+        font-size="13">.githooks/check-secrets.sh</text>
+
+  <text x="626" y="284" fill="#4B5464"
+        font-family="ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, 'Liberation Mono', monospace"
+        font-size="13">… 19 more files</text>
+
+  <line x1="600" y1="302" x2="1208" y2="302" stroke="#22262F" stroke-width="1"/>
+
+  <!-- summary -->
+  <text x="608" y="330" fill="#34D399"
+        font-family="ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, 'Liberation Mono', monospace"
+        font-size="13" font-weight="700">Done.</text>
+  <text x="660" y="330" fill="#8A94A6"
+        font-family="ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, 'Liberation Mono', monospace"
+        font-size="13">25 files written — 11 recipes.</text>
+</svg>

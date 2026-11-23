@@ -6,6 +6,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- Repo artwork: a README banner, a four-step "how it works" explainer and a
+  social preview card, hand-written as SVG (`docs/banner.svg`,
+  `docs/how-it-works.svg`, `docs/social-card.svg`) and rendered to PNG at 2x
+
 ## [0.2.1] - 2026-11-08
 
 ### Changed

@@ -1,0 +1,107 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="640" viewBox="0 0 1280 640"
+     role="img" aria-label="reposet - every new repo, set up in one command">
+  <!-- GitHub social preview / Open Graph card for reposet, 1280x640.
+       Render: python render.py docs/social-card.svg -s 2 -o <absolute path>.png -->
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#0B0C0E"/>
+      <stop offset="1" stop-color="#0E1117"/>
+    </linearGradient>
+    <radialGradient id="glowGreen">
+      <stop offset="0" stop-color="#34D399" stop-opacity="0.18"/>
+      <stop offset="1" stop-color="#34D399" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="glowBlue">
+      <stop offset="0" stop-color="#5B8CFF" stop-opacity="0.16"/>
+      <stop offset="1" stop-color="#5B8CFF" stop-opacity="0"/>
+    </radialGradient>
+    <pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse">
+      <path d="M40 0 H0 V40" fill="none" stroke="#151820" stroke-width="1"/>
+    </pattern>
+    <filter id="shadow" x="-30%" y="-30%" width="160%" height="160%">
+      <feDropShadow dx="0" dy="18" stdDeviation="24" flood-color="#000000" flood-opacity="0.55"/>
+    </filter>
+  </defs>
+
+  <!-- background: gradient, grid, two glows -->
+  <rect width="1280" height="640" fill="url(#bg)"/>
+  <rect width="1280" height="640" fill="url(#grid)" opacity="0.55"/>
+  <ellipse cx="220" cy="180" rx="440" ry="280" fill="url(#glowGreen)"/>
+  <ellipse cx="1100" cy="540" rx="460" ry="300" fill="url(#glowBlue)"/>
+
+  <!-- lockup: wordmark only, matching the banner -->
+  <text x="72" y="90" fill="#F5F7FA"
+        font-family="ui-sans-serif, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif"
+        font-size="30" font-weight="600" letter-spacing="-0.6">reposet</text>
+
+  <!-- tinted pill, top right -->
+  <rect x="1116" y="62" width="92" height="28" rx="14" fill="#34D399" fill-opacity="0.14"/>
+  <text x="1162" y="81" fill="#34D399"
+        font-family="ui-sans-serif, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif"
+        font-size="10" font-weight="700" letter-spacing="0.6" text-anchor="middle">11 RECIPES</text>
+
+  <!-- statement: two hand-wrapped lines -->
+  <text x="72" y="276" fill="#F5F7FA"
+        font-family="ui-sans-serif, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif"
+        font-size="100" font-weight="700" letter-spacing="-2.4">Every new repo,</text>
+  <text x="72" y="372" fill="#8A94A6"
+        font-family="ui-sans-serif, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif"
+        font-size="100" font-weight="700" letter-spacing="-2.4">set up in one command.</text>
+
+  <!-- proof: a strip of the real output, cropped into the canvas -->
+  <rect x="56" y="424" width="1168" height="164" rx="16" fill="#12141A" stroke="#262A33"
+        stroke-width="1.5" filter="url(#shadow)"/>
+
+  <!-- card 1 -->
+  <rect x="76" y="444" width="365" height="120" rx="12" fill="#171A21" stroke="#262A33"/>
+  <text x="92" y="474" fill="#E8ECF2"
+        font-family="ui-sans-serif, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif"
+        font-size="18" font-weight="600">Issue forms</text>
+  <line x1="92" y1="490" x2="425" y2="490" stroke="#22262F" stroke-width="1"/>
+  <text x="92" y="518" fill="#34D399"
+        font-family="ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, 'Liberation Mono', monospace"
+        font-size="12">+</text>
+  <text x="110" y="518" fill="#C3CBD9"
+        font-family="ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, 'Liberation Mono', monospace"
+        font-size="12">.github/ISSUE_TEMPLATE/</text>
+  <text x="92" y="552" fill="#6B7484"
+        font-family="ui-sans-serif, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif"
+        font-size="13">bug · feature · config</text>
+
+  <!-- card 2 -->
+  <rect x="457" y="444" width="365" height="120" rx="12" fill="#171A21" stroke="#262A33"/>
+  <text x="473" y="474" fill="#E8ECF2"
+        font-family="ui-sans-serif, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif"
+        font-size="18" font-weight="600">CI workflow</text>
+  <line x1="473" y1="490" x2="806" y2="490" stroke="#22262F" stroke-width="1"/>
+  <text x="473" y="518" fill="#34D399"
+        font-family="ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, 'Liberation Mono', monospace"
+        font-size="12">+</text>
+  <text x="491" y="518" fill="#C3CBD9"
+        font-family="ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, 'Liberation Mono', monospace"
+        font-size="12">.github/workflows/ci.yml</text>
+  <text x="473" y="552" fill="#6B7484"
+        font-family="ui-sans-serif, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif"
+        font-size="13">build, test and hygiene</text>
+
+  <!-- card 3 -->
+  <rect x="838" y="444" width="365" height="120" rx="12" fill="#171A21" stroke="#262A33"/>
+  <text x="854" y="474" fill="#E8ECF2"
+        font-family="ui-sans-serif, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif"
+        font-size="18" font-weight="600">Secret scan</text>
+  <line x1="854" y1="490" x2="1187" y2="490" stroke="#22262F" stroke-width="1"/>
+  <text x="854" y="518" fill="#34D399"
+        font-family="ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, 'Liberation Mono', monospace"
+        font-size="12">+</text>
+  <text x="872" y="518" fill="#C3CBD9"
+        font-family="ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, 'Liberation Mono', monospace"
+        font-size="12">.githooks/check-secrets.sh</text>
+  <text x="854" y="552" fill="#6B7484"
+        font-family="ui-sans-serif, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif"
+        font-size="13">gitleaks, fallback, 1 MiB</text>
+
+  <!-- footer -->
+  <text x="72" y="624" fill="#5F697A"
+        font-family="ui-sans-serif, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif"
+        font-size="16" letter-spacing="0.3">github.com/n4od/reposet  ·  <tspan font-family="ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, 'Liberation Mono', monospace" fill="#8A94A6">npx reposet init</tspan>  ·  zero dependencies  ·  MIT</text>
+</svg>
